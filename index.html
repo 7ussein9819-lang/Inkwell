@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>مِحْبَرَة — منشئ نماذج الأسئلة</title>
+<title>Inkwell — Question Paper Builder</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d9488">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="مِحْبَرَة">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-title" content="Inkwell">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
   --bg-0:#eef1f8; --bg-1:#ffffff; --bg-2:#f6f8fc; --bg-3:#e6ebf3;
@@ -512,7 +512,7 @@ input.shape-lbl:focus{border-color:var(--accent);border-style:solid;background:#
   <div class="brand">
     <div class="brand-icon">📝</div>
     <div class="brand-text">
-      <b>مِحْبَرَة</b>
+      <b>Inkwell</b>
       <small id="topbar-sub">صفحة المعاينة</small>
     </div>
   </div>
@@ -1988,9 +1988,9 @@ function exportWord(){
     +'.q-head-row{display:flex;justify-content:space-between;align-items:baseline;}'
     +'.content-table{border-collapse:collapse;width:100%;}'
     +'.content-table td,.content-table th{border:1px solid #000;padding:4px 8px;text-align:center;}';
-  const html='<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="ar"><head><meta charset="utf-8"><title>نموذج أسئلة</title><style>'+styles+'</style></head><body>'+bodyHtml+'</body></html>';
+  const html='<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="ar"><head><meta charset="utf-8"><title>Inkwell</title><style>'+styles+'</style></head><body>'+bodyHtml+'</body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='نموذج-أسئلة.doc';
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='inkwell-paper.doc';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   toast('تم حفظ Word ✅');
@@ -1999,7 +1999,7 @@ function backup(){
   closeMenu();
   const data=JSON.stringify(state,null,2);
   const blob=new Blob([data],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='نموذج-أسئلة.json';
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='inkwell-backup.json';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   toast('تم حفظ نسخة 💾');
@@ -2084,7 +2084,6 @@ function boot(){
 
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}else{boot();}
 
-/* ★ تسجيل Service Worker للعمل أوفلاين ★ */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./service-worker.js')
