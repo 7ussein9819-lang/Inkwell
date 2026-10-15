@@ -1141,3 +1141,270 @@ async function authSignOut(){
   await supaClient.auth.signOut();
   currentUser = null; updateAuthUI(); toast('تم تسجيل الخروج');
 }
+
+// ============================================================
+// Build Header / Footer / Question
+// ============================================================
+function buildHeaderElement(){
+  const header=document.createElement('div');header.className='page-header';
+  const grid=document.createElement('div');grid.className='header-grid';
+  const colR=document.createElement('div');colR.className='hcol hcol-right';
+  [state.h.school,state.h.dir,state.h.rightExtra].forEach(o=>{
+    if(!o||!o.text)return;
+    const d=document.createElement('div');d.className='hfield';applyStyle(d,o);colR.appendChild(d);
+  });
+  grid.appendChild(colR);
+  const colC=document.createElement('div');colC.className='hcol hcol-center';
+  [state.h.subject,state.h.year].forEach(o=>{
+    const d=document.createElement('div');d.className='hfield';applyStyle(d,o);colC.appendChild(d);
+  });
+  grid.appendChild(colC);
+  const colL=document.createElement('div');colL.className='hcol hcol-left';
+  [state.h.time,state.h.subjectLeft,state.h.grade,state.h.leftExtra].forEach(o=>{
+    if(!o||!o.text)return;
+    const d=document.createElement('div');d.className='hfield';applyStyle(d,o);colL.appendChild(d);
+  });
+  grid.appendChild(colL);
+  header.appendChild(grid);
+  if(state.h.extra.enabled&&state.h.extra.text){
+    const extra=document.createElement('div');extra.className='header-extra';applyStyle(extra,state.h.extra);header.appendChild(extra);
+  }
+  const line=document.createElement('div');line.className='header-line';
+  line.style.borderTop='2px solid '+(state.h.lineColor||'#111827');
+  header.appendChild(line);
+  if(state.h.note.text){
+    const note=document.createElement('div');note.className='header-note';applyStyle(note,state.h.note);
+    note.style.textAlign=state.h.note.align||'center';
+    header.appendChild(note);
+  }
+  return header;
+}
+
+function buildFooterElement(){
+  const footer=document.createElement('div');footer.className='page-footer';
+  if(state.f.wish.text){const wish=document.createElement('div');wish.className='footer-wish';applyStyle(wish,state.f.wish);footer.appendChild(wish);}
+  const grid=document.createElement('div');grid.className='footer-grid';
+  const cR=document.createElement('div');cR.className='fcol right';
+  const tWrap=document.createElement('div');tWrap.className='footer-teachers';
+  state.f.teacherList.forEach(name=>{if(!name)return;const t=document.createElement('div');applyStyle(t,Object.assign({},state.f.teachers,{text:name}));tWrap.appendChild(t);});
+  if(tWrap.childNodes.length)cR.appendChild(tWrap);
+  grid.appendChild(cR);
+  const cC=document.createElement('div');cC.className='fcol center';applyStyle(cC,state.f.center);grid.appendChild(cC);
+  const cL=document.createElement('div');cL.className='fcol left';applyStyle(cL,state.f.left);grid.appendChild(cL);
+  footer.appendChild(grid);
+  return footer;
+}
+
+function htmlForPaper(html){
+  const temp=document.createElement('div');
+  temp.innerHTML=html||'';
+  temp.querySelectorAll('input.shape-lbl').forEach(inp=>{
+    const span=document.createElement('span');
+    span.className='shape-lbl';
+    span.style.cssText=inp.style.cssText;
+    span.style.width='auto';span.style.height='auto';
+    span.textContent=(inp.value||'').trim()||'';
+    inp.replaceWith(span);
+  });
+  return temp.innerHTML;
+}
+
+function buildQuestionElement(q){
+  const el=document.createElement('div');el.className='q-item';
+  const head=document.createElement('div');head.className='q-head-row';
+  const title=document.createElement('div');title.className='q-title-el';
+  const ts=q.titleStyle||{};
+  title.style.fontFamily=(ts.family||'Arial')+', Arial, sans-serif';
+  title.style.fontSize=(ts.size||14)+'pt';
+  title.style.fontWeight=ts.weight||'bold';
+  title.style.color=ts.color||'#111827';
+  title.textContent=q.title||'';
+  head.appendChild(title);
+  const pts=document.createElement('div');pts.className='q-points-el';
+  pts.style.fontFamily=(ts.family||'Arial')+', Arial, sans-serif';
+  pts.style.fontSize=(ts.size||14)+'pt';
+  pts.style.fontWeight='bold';
+  pts.style.color=ts.color||'#111827';
+  pts.textContent=(q.points&&Number(q.points)>0)?'('+q.points+')':'';
+  head.appendChild(pts);
+  el.appendChild(head);
+  if(q.desc){
+    const ds=q.descStyle||{};
+    const desc=document.createElement('div');desc.className='q-desc-el';
+    desc.style.fontFamily=(ds.family||'Arial')+', Arial, sans-serif';
+    desc.style.fontSize=(ds.size||14)+'pt';
+    desc.style.fontWeight=ds.weight||'normal';
+    desc.style.color=ds.color||'#111827';
+    desc.style.lineHeight=String(ds.lineHeight||1.6);
+    desc.innerHTML=htmlForPaper(q.desc);
+    el.appendChild(desc);
+  }
+  if(q.image){
+    const img=document.createElement('img');img.className='q-image';img.src=q.image;
+    img.onload=()=>{schedulePaperUpdate();};
+    el.appendChild(img);
+  }
+  return el;
+}
+
+function buildAnswerPageElement(q,i){
+  const el=document.createElement('div');el.className='ans-item';
+  const ts=q.ansTitleStyle||{};
+  const title=document.createElement('div');title.className='ans-title';
+  title.style.fontFamily=(ts.family||'Arial')+', Arial, sans-serif';
+  title.style.fontSize=(ts.size||14)+'pt';
+  title.style.fontWeight=ts.weight||'bold';
+  title.style.color=ts.color||'#111827';
+  title.textContent=q.ansTitle||('س '+(i+1));
+  el.appendChild(title);
+  const as=q.ansAnswerStyle||{};
+  const txt=document.createElement('div');txt.className='ans-text';
+  txt.style.fontFamily=(as.family||'Arial')+', Arial, sans-serif';
+  txt.style.fontSize=(as.size||14)+'pt';
+  txt.style.fontWeight=as.weight||'normal';
+  txt.style.color=as.color||'#111827';
+  txt.style.lineHeight=String(as.lineHeight||1.7);
+  txt.textContent=q.ansAnswer||'';
+  el.appendChild(txt);
+  return el;
+}
+
+function buildWatermarkElement(){
+  if(!state.wm||state.wm.type==='none')return null;
+  const wrap=document.createElement('div');wrap.className='watermark';
+  if(state.wm.type==='text'&&state.wm.text){
+    const t=document.createElement('div');t.className='watermark-text';
+    t.textContent=state.wm.text;t.style.color=state.wm.color||'#000';
+    t.style.opacity=state.wm.opacity||0.08;
+    t.style.fontSize=(state.wm.size||100)+'px';
+    t.style.transform='rotate('+(state.wm.rotate||-30)+'deg)';
+    wrap.appendChild(t);
+  }else if(state.wm.type==='image'&&state.wm.image){
+    const img=document.createElement('img');img.className='watermark-img';
+    img.src=state.wm.image;img.style.opacity=state.wm.opacity||0.1;
+    img.style.transform='rotate('+(state.wm.rotate||-30)+'deg)';
+    if(state.wm.size)img.style.maxWidth=state.wm.size+'%';
+    wrap.appendChild(img);
+  }else{return null;}
+  return wrap;
+}
+
+function buildFrameElement(){
+  const frame=document.createElement('div');
+  const style=state.frame.style||'none';
+  const found=FRAMES.find(f=>f.id===style);
+  frame.className='page-frame '+(found?found.css:'frame-none');
+  frame.style.setProperty('--frame-c',state.frame.color||'#000');
+  return frame;
+}
+
+const PAGE_PADDING_MM=12;
+const PAGE_PADDING_TOP_MM=8;
+const A4_WIDTH_MM=210;
+const A4_HEIGHT_MM=297;
+const CONTENT_WIDTH_MM=A4_WIDTH_MM-2*PAGE_PADDING_MM;
+const CONTENT_HEIGHT_MM=A4_HEIGHT_MM-PAGE_PADDING_TOP_MM-PAGE_PADDING_MM;
+function mmToPx(mm){return mm*96/25.4;}
+
+function measure(el){
+  const temp=document.createElement('div');
+  temp.style.cssText='position:absolute;top:-99999px;left:-99999px;visibility:hidden;width:'+CONTENT_WIDTH_MM+'mm;padding:0;margin:0;';
+  temp.appendChild(el);
+  document.body.appendChild(temp);
+  const h=el.getBoundingClientRect().height;
+  document.body.removeChild(temp);
+  return h;
+}
+
+function buildPages(){
+  const container=$('pages-container');if(!container)return;container.innerHTML='';
+  const headerEl=buildHeaderElement();const headerH=measure(headerEl);
+  const footerEl=buildFooterElement();const footerH=measure(footerEl);
+  const qHeights=state.questions.map(q=>measure(buildQuestionElement(q)));
+  const contentHeightPx=mmToPx(CONTENT_HEIGHT_MM);
+  const GAP=6;
+  const pages=[];let usedH=headerH;let current={isFirst:true,questions:[]};
+  for(let i=0;i<qHeights.length;i++){
+    const need=qHeights[i]+GAP;
+    if(usedH+need>contentHeightPx&&current.questions.length>0){
+      pages.push(current);current={isFirst:false,questions:[]};usedH=0;
+    }
+    current.questions.push(i);usedH+=need;
+  }
+  pages.push(current);
+  const last=pages[pages.length-1];
+  let lastUsed=last.isFirst?headerH:0;
+  last.questions.forEach(qi=>{lastUsed+=qHeights[qi]+GAP;});
+  if(lastUsed+footerH+GAP>contentHeightPx&&last.questions.length>1){
+    const moved=last.questions.pop();
+    pages.push({isFirst:false,questions:[moved]});
+  }
+  const pageWidthPx=mmToPx(A4_WIDTH_MM);
+  const pageHeightPx=mmToPx(A4_HEIGHT_MM);
+  pages.forEach((p,idx)=>{
+    const scaler=document.createElement('div');scaler.className='page-scaler';
+    scaler.style.width=pageWidthPx+'px';scaler.style.height=pageHeightPx+'px';
+    const pageEl=document.createElement('div');pageEl.className='page';
+    const wmEl=buildWatermarkElement();if(wmEl)pageEl.appendChild(wmEl);
+    pageEl.appendChild(buildFrameElement());
+    const content=document.createElement('div');content.className='page-content';
+    if(p.isFirst)content.appendChild(buildHeaderElement());
+    const main=document.createElement('div');main.className='page-main';
+    p.questions.forEach(qi=>main.appendChild(buildQuestionElement(state.questions[qi])));
+    content.appendChild(main);
+    if(idx===pages.length-1)content.appendChild(buildFooterElement());
+    pageEl.appendChild(content);scaler.appendChild(pageEl);container.appendChild(scaler);
+  });
+  if(state.showAnswers && state.questions.length){
+    const ansPages=[];let ansCur={items:[]};let ansUsed=0;
+    const titleEl=document.createElement('div');
+    titleEl.style.cssText='text-align:center;font-weight:bold;font-size:18pt;margin-bottom:12px;';
+    titleEl.textContent=state.answerTitle||'مفتاح الإجابة';
+    ansUsed=measure(titleEl);
+    state.questions.forEach((q,i)=>{
+      const aEl=buildAnswerPageElement(q,i);const h=measure(aEl)+6;
+      if(ansUsed+h>contentHeightPx && ansCur.items.length>0){ansPages.push(ansCur);ansCur={items:[]};ansUsed=0;}
+      ansCur.items.push({q,i});ansUsed+=h;
+    });
+    if(ansCur.items.length)ansPages.push(ansCur);
+    ansPages.forEach((ap,idx)=>{
+      const scaler=document.createElement('div');scaler.className='page-scaler';
+      scaler.style.width=pageWidthPx+'px';scaler.style.height=pageHeightPx+'px';
+      const pageEl=document.createElement('div');pageEl.className='page';
+      const content=document.createElement('div');content.className='page-content';
+      const main=document.createElement('div');main.className='page-main';
+      if(idx===0){
+        const t=document.createElement('div');
+        t.style.cssText='text-align:center;font-weight:bold;font-size:18pt;margin-bottom:12px;';
+        t.textContent=state.answerTitle||'مفتاح الإجابة';
+        main.appendChild(t);
+      }
+      ap.items.forEach(it=>main.appendChild(buildAnswerPageElement(it.q,it.i)));
+      content.appendChild(main);pageEl.appendChild(content);scaler.appendChild(pageEl);container.appendChild(scaler);
+    });
+  }
+  fitPages();
+}
+
+function fitPages(){
+  const container=$('pages-container');if(!container)return;
+  const available=container.clientWidth-16;
+  const pageWidthPx=mmToPx(A4_WIDTH_MM);
+  const pageHeightPx=mmToPx(A4_HEIGHT_MM);
+  const baseScale=Math.min(1, available/pageWidthPx);
+  const finalScale=baseScale*(state.ui.zoom||1);
+  container.querySelectorAll('.page-scaler').forEach(s=>{
+    s.style.width=(pageWidthPx*finalScale)+'px';
+    s.style.height=(pageHeightPx*finalScale)+'px';
+    const p=s.querySelector('.page');
+    if(p){p.style.transform='scale('+finalScale+')';p.style.transformOrigin='top right';p.style.right='0';p.style.left='auto';}
+  });
+}
+window.addEventListener('resize',fitPages);
+function changeZoom(delta){
+  let z=(state.ui.zoom||1)+delta;
+  z=Math.max(0.3,Math.min(2.5,z));
+  state.ui.zoom=Math.round(z*10)/10;
+  save();fitPages();updateZoomUI();
+}
+function updateZoomUI(){const el=$('zoomPct');if(el)el.textContent=Math.round((state.ui.zoom||1)*100)+'%';}
