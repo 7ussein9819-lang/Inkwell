@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mihbara-v1.0.0';
+const CACHE_NAME = 'inkwell-v1.0.0';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (e) => {
