@@ -894,3 +894,250 @@ input.shape-lbl:focus{border-color:var(--accent);border-style:solid;background:#
   <hr>
   <button onclick="ctxAction('selectAll')"><span>🔘</span> تحديد الكل</button>
 </div>
+
+<script>
+"use strict";
+
+// ============================================================
+// Supabase Configuration
+// ============================================================
+const SUPABASE_URL = 'https://zebzejiblhoyptmqmnhn.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplYnplamlibGhveXB0bXFtbmhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwODE5MDcsImV4cCI6MjEwNzY1NzkwN30.1lGPCaSlBYdqc3MuL-BxXoa8LUcitfKg9FQ6FFaTp3k';
+let supaClient = null;
+let currentUser = null;
+
+// ============================================================
+// Constants
+// ============================================================
+const STORAGE_KEY='qform_v16';
+const THEME_KEY='qform_theme';
+const MAX_QUESTIONS=10;
+const FONTS=['Arial','Tahoma','Times New Roman','Traditional Arabic','Simplified Arabic','Sakkal Majalla','Andalus','Diwani','Arabic Typesetting','Calibri','Courier New'];
+
+const FRAMES=[
+  {id:'none',label:'بدون',css:'frame-none'},
+  {id:'solid',label:'عادي',css:'frame-solid'},
+  {id:'thin-solid',label:'رفيع',css:'frame-thin-solid'},
+  {id:'double',label:'مزدوج',css:'frame-double'},
+  {id:'thin-double',label:'مزدوج رفيع',css:'frame-thin-double'},
+  {id:'triple',label:'ثلاثي',css:'frame-triple'},
+  {id:'dashed',label:'متقطع',css:'frame-dashed'},
+  {id:'dotted',label:'منقط',css:'frame-dotted'},
+  {id:'thick',label:'سميك',css:'frame-thick'},
+  {id:'elegant',label:'أنيق',css:'frame-elegant'},
+  {id:'rounded',label:'مستدير',css:'frame-rounded'},
+  {id:'corners',label:'زوايا',css:'frame-corners'},
+  {id:'top-bottom',label:'أعلى وأسفل',css:'frame-top-bottom'},
+  {id:'left-right',label:'يمين ويسار',css:'frame-left-right'},
+  {id:'double-thin',label:'داخلي',css:'frame-double-thin'},
+  {id:'ornate',label:'مزخرف',css:'frame-ornate'}
+];
+
+const SYMBOL_CATS = {
+  'حساب':['+','−','×','÷','±','∓','·','⋅','%','‰','½','⅓','¼','⅔','¾'],
+  'مقارنة':['=','≠','≈','≃','≅','<','>','≤','≥','≪','≫','∝','≡'],
+  'هندسة':['°','∠','∡','∢','⊥','∥','△','□','○','◇','▱','π'],
+  'مجموعات':['∈','∉','⊂','⊃','⊆','⊇','∪','∩','∅','∀','∃'],
+  'تفاضل':['∑','∏','∫','∬','∭','∂','∇','∞','∴','∵'],
+  'أغريقي':['α','β','γ','δ','ε','θ','λ','μ','π','ρ','σ','φ','χ','ψ','ω'],
+  'كبير':['Γ','Δ','Θ','Λ','Ξ','Π','Σ','Φ','Ψ','Ω'],
+  'أسهم':['←','→','↑','↓','↔','⇕','⇒','⇐','⇔','↦']
+};
+
+const SHAPES=[
+  {id:'tri',name:'مثلث',w:150,h:130,svg:'<svg viewBox="0 0 150 130" preserveAspectRatio="none"><polygon points="75,15 12,115 138,115" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'A'},{x:8,y:122,p:'B'},{x:142,y:122,p:'C'},{x:75,y:127,p:'a'},{x:117,y:60,r:54,p:'b'},{x:33,y:60,r:-54,p:'c'}]},
+  {id:'rtri',name:'قائم',w:150,h:130,svg:'<svg viewBox="0 0 150 130" preserveAspectRatio="none"><polygon points="15,15 15,115 135,115" fill="none" stroke="currentColor" stroke-width="1.6"/><polyline points="15,101 29,101 29,115" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',labels:[{x:6,y:65,p:'a'},{x:75,y:127,p:'b'},{x:100,y:55,r:-46,p:'c'},{x:8,y:122,p:'B'},{x:142,y:122,p:'C'},{x:75,y:6,p:'A'}]},
+  {id:'sq',name:'مربع',w:100,h:100,svg:'<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="15" y="15" width="70" height="70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:50,y:6,p:'a'},{x:50,y:94,p:'c'},{x:6,y:50,p:'b'},{x:94,y:50,p:'d'}]},
+  {id:'rect',name:'مستطيل',w:150,h:100,svg:'<svg viewBox="0 0 150 100" preserveAspectRatio="none"><rect x="15" y="15" width="120" height="70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'a'},{x:75,y:94,p:'c'},{x:6,y:50,p:'b'},{x:144,y:50,p:'d'}]},
+  {id:'circ',name:'دائرة',w:100,h:100,svg:'<svg viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:50,y:94,p:'O'}]},
+  {id:'circ-r',name:'نصف قطر',w:110,h:100,svg:'<svg viewBox="0 0 110 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="50" y1="50" x2="90" y2="50" stroke="currentColor" stroke-width="1.6"/><circle cx="50" cy="50" r="2" fill="currentColor"/></svg>',labels:[{x:50,y:98,p:'O'},{x:70,y:42,p:'r'}]},
+  {id:'circ-d',name:'قطر',w:110,h:100,svg:'<svg viewBox="0 0 110 100" preserveAspectRatio="none"><circle cx="55" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="50" x2="95" y2="50" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:55,y:40,p:'d'}]},
+  {id:'trap',name:'شبه منحرف',w:150,h:100,svg:'<svg viewBox="0 0 150 100" preserveAspectRatio="none"><polygon points="45,15 105,15 140,85 10,85" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'a'},{x:75,y:94,p:'c'},{x:20,y:50,r:-68,p:'b'},{x:130,y:50,r:68,p:'d'}]},
+  {id:'para',name:'متوازي',w:150,h:85,svg:'<svg viewBox="0 0 150 85" preserveAspectRatio="none"><polygon points="40,15 145,15 110,70 5,70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:92,y:6,p:'a'},{x:58,y:79,p:'c'},{x:18,y:43,r:-58,p:'b'},{x:132,y:43,r:-58,p:'d'}]},
+  {id:'rho',name:'معين',w:90,h:120,svg:'<svg viewBox="0 0 90 120" preserveAspectRatio="none"><polygon points="45,15 80,60 45,105 10,60" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:45,y:6,p:'A'},{x:88,y:60,p:'B'},{x:45,y:114,p:'C'},{x:2,y:60,p:'D'}]},
+  {id:'pent',name:'خماسي',w:110,h:110,svg:'<svg viewBox="0 0 110 110" preserveAspectRatio="none"><polygon points="55,15 105,50 85,100 25,100 5,50" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:55,y:6,p:'A'},{x:108,y:50,p:'B'},{x:85,y:106,p:'C'},{x:25,y:106,p:'D'},{x:2,y:50,p:'E'}]},
+  {id:'hex',name:'سداسي',w:120,h:110,svg:'<svg viewBox="0 0 120 110" preserveAspectRatio="none"><polygon points="35,15 85,15 110,55 85,95 35,95 10,55" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:60,y:6,p:'A'},{x:118,y:55,p:'B'},{x:85,y:106,p:'C'},{x:35,y:106,p:'D'},{x:2,y:55,p:'E'}]},
+  {id:'angle',name:'زاوية',w:120,h:100,svg:'<svg viewBox="0 0 120 100" preserveAspectRatio="none"><line x1="10" y1="88" x2="110" y2="88" stroke="currentColor" stroke-width="1.6"/><line x1="10" y1="88" x2="100" y2="15" stroke="currentColor" stroke-width="1.6"/><path d="M 42 88 A 32 32 0 0 0 30 65" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',labels:[{x:6,y:94,p:'O'},{x:112,y:94,p:'A'},{x:100,y:8,p:'B'},{x:40,y:70,p:'θ'}]},
+  {id:'longdiv',name:'قسمة',w:140,h:100,svg:'<svg viewBox="0 0 140 100" preserveAspectRatio="none"><line x1="10" y1="30" x2="130" y2="30" stroke="currentColor" stroke-width="1.8"/><line x1="35" y1="10" x2="35" y2="90" stroke="currentColor" stroke-width="1.8"/><line x1="35" y1="30" x2="10" y2="10" stroke="currentColor" stroke-width="1.8"/></svg>',labels:[{x:82,y:20,p:''},{x:22,y:60,p:''},{x:82,y:60,p:''}]},
+  {id:'coord',name:'محور',w:120,h:120,svg:'<svg viewBox="0 0 120 120" preserveAspectRatio="none"><line x1="15" y1="105" x2="110" y2="105" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="105" x2="15" y2="15" stroke="currentColor" stroke-width="1.6"/><polygon points="110,105 104,102 104,108" fill="currentColor"/><polygon points="15,15 12,21 18,21" fill="currentColor"/></svg>',labels:[{x:112,y:116,p:'x'},{x:10,y:8,p:'y'},{x:6,y:114,p:'O'}]}
+];
+
+const MATH_ITEMS = [
+  {id:'frac',label:'كسر',glyph:'<span class="math-frac"><span class="mf-num">a</span><span class="mf-den">b</span></span>'},
+  {id:'frac3',label:'كسر 1/2',glyph:'<span class="math-frac"><span class="mf-num">1</span><span class="mf-den">2</span></span>'},
+  {id:'root',label:'جذر',glyph:'<span class="math-root"><span class="mr-sym">√</span><span class="mr-content">x</span></span>'},
+  {id:'root3',label:'جذر تكعيبي',glyph:'<span class="math-root"><span class="mr-sym">∛</span><span class="mr-content">x</span></span>'},
+  {id:'int',label:'تكامل',glyph:'<span style="font-size:1.5em;vertical-align:middle;">∫</span><sub>a</sub><sup>b</sup>'},
+  {id:'iint',label:'تكامل ثنائي',glyph:'<span style="font-size:1.5em;vertical-align:middle;">∬</span>'},
+  {id:'sum',label:'مجموع',glyph:'<span style="font-size:1.3em;vertical-align:middle;">Σ</span><sub>i=1</sub><sup>n</sup>'},
+  {id:'prod',label:'جداء',glyph:'<span style="font-size:1.3em;vertical-align:middle;">∏</span><sub>i=1</sub><sup>n</sup>'},
+  {id:'lim',label:'نهاية',glyph:'<span class="math-lim"><span class="ml-lim">lim</span><span class="ml-sub">x→0</span></span>'},
+  {id:'mx2',label:'مصفوفة 2×2',glyph:'<span class="math-matrix"><table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table></span>'},
+  {id:'mx3',label:'مصفوفة 3×3',glyph:'<span class="math-matrix"><table><tr><td>a</td><td>b</td><td>c</td></tr><tr><td>d</td><td>e</td><td>f</td></tr><tr><td>g</td><td>h</td><td>i</td></tr></table></span>'},
+  {id:'ovl',label:'فوقه خط',glyph:'<span style="border-top:1.4px solid currentColor;padding:2px 6px;">AB</span>'},
+  {id:'vec',label:'متجهة',glyph:'<span style="position:relative;padding:0 3px;">AB<span style="position:absolute;top:-4px;right:0;left:0;text-align:center;font-size:.7em;">→</span></span>'},
+  {id:'deg',label:'درجة',glyph:'45°'},
+  {id:'pi',label:'π',glyph:'π'},
+  {id:'sqrt-pi',label:'جذر π',glyph:'√π'},
+  {id:'sub',label:'سفلي',glyph:'x<sub>1</sub>'},
+  {id:'sup',label:'علوي',glyph:'x<sup>2</sup>'},
+  {id:'log',label:'لوغاريتم',glyph:'log<sub>a</sub>(x)'},
+  {id:'abs',label:'مطلق',glyph:'|x|'},
+  {id:'binom',label:'معامل',glyph:'<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="border-bottom:1.4px solid currentColor;padding:0 4px;display:block;">n</span><span style="padding:0 4px;display:block;">k</span></span>'}
+];
+
+function defaultFont(){return{text:'',family:'Arial',size:12,weight:'normal',color:'#111827'};}
+function defaultTitleStyle(){return{family:'Arial',size:14,weight:'bold',color:'#111827'};}
+function defaultDescStyle(){return{family:'Arial',size:14,weight:'normal',color:'#111827',lineHeight:1.6};}
+function defaultAnsTitleStyle(){return{family:'Arial',size:14,weight:'bold',color:'#111827'};}
+function defaultAnsAnswerStyle(){return{family:'Arial',size:14,weight:'normal',color:'#111827',lineHeight:1.7};}
+
+const defaultState={
+  h:{
+    school:Object.assign(defaultFont(),{text:'اسم المدرسة',size:16,weight:'bold'}),
+    dir:Object.assign(defaultFont(),{text:'المديرية العامة',size:11}),
+    rightExtra:Object.assign(defaultFont(),{text:'',size:11}),
+    subject:Object.assign(defaultFont(),{text:'المادة / عنوان الأسئلة',size:18,weight:'bold'}),
+    year:Object.assign(defaultFont(),{text:'العام الدراسي 2025 - 2026',size:12}),
+    time:Object.assign(defaultFont(),{text:'الوقت: ساعة',size:12}),
+    subjectLeft:Object.assign(defaultFont(),{text:'المادة: ...',size:12}),
+    grade:Object.assign(defaultFont(),{text:'الصف: ...',size:12}),
+    leftExtra:Object.assign(defaultFont(),{text:'',size:12}),
+    extra:Object.assign(defaultFont(),{enabled:false,text:'حقل إضافي',size:12}),
+    note:Object.assign(defaultFont(),{text:'أجب عن أربعة أسئلة فقط',size:14,weight:'bold',align:'center'}),
+    lineColor:'#111827'
+  },
+  wm:{type:'none',text:'نموذج امتحان',image:null,size:100,color:'#000000',opacity:0.08,rotate:-30},
+  f:{
+    wish:Object.assign(defaultFont(),{text:'مع تمنياتنا لكم بالنجاح',size:14,weight:'bold'}),
+    teachers:Object.assign(defaultFont(),{size:12}),
+    teacherList:['اسم المعلم'],
+    center:Object.assign(defaultFont(),{text:'',size:12}),
+    left:Object.assign(defaultFont(),{text:'',size:12})
+  },
+  frame:{style:'none',color:'#111827'},
+  ui:{zoom:1},
+  showAnswers:false,
+  answerTitle:'مفتاح الإجابة',
+  questions:[]
+};
+
+let state=JSON.parse(JSON.stringify(defaultState));
+let savedRange=null;
+let selectedShape=null;
+let selectedShapeEditor=null;
+
+function $(id){return document.getElementById(id);}
+function setNested(obj,path,val){const p=path.split('.');let c=obj;for(let i=0;i<p.length-1;i++){if(!(p[i] in c))c[p[i]]={};c=c[p[i]];}c[p[p.length-1]]=val;}
+function getNested(obj,path){return path.split('.').reduce((o,k)=>o==null?undefined:o[k],obj);}
+
+let saveTimer=null,saveIndTimer=null;
+function save(){
+  if(saveTimer)clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));showSaveInd();}catch(e){}},400);
+}
+function showSaveInd(){
+  const el=$('save-ind');if(!el)return;
+  el.classList.add('show');
+  if(saveIndTimer)clearTimeout(saveIndTimer);
+  saveIndTimer=setTimeout(()=>el.classList.remove('show'),900);
+}
+function toast(msg){const t=$('toast');if(!t)return;t.textContent=msg;t.classList.add('show');if(t._timer)clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2000);}
+function deepMerge(t,s){const o=Object.assign({},t);for(const k in s){if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==='object'&&!Array.isArray(t[k])){o[k]=deepMerge(t[k],s[k]);}else{o[k]=s[k];}}return o;}
+
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.btn, .mini-btn, .tool-btn, .add-q-btn, .auth-btn-primary');
+  if (!btn) return;
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+});
+
+let paperTimer=null;
+function schedulePaperUpdate(){if(paperTimer)clearTimeout(paperTimer);paperTimer=setTimeout(buildPages,200);}
+
+function fullRender(){
+  buildPages();
+  renderQuestionsEditor();
+  renderAnswersEditor();
+  renderTeachersEditor();
+  updateQuestionCounter();
+  updateFramePicker();
+  updateThemePicker();
+  updateZoomUI();
+  syncNoteAlignBtns();
+}
+
+function applyStyle(el,obj){
+  if(!obj)return;
+  el.style.fontFamily=(obj.family||'Arial')+', Arial, sans-serif';
+  el.style.fontSize=(obj.size||12)+'pt';
+  el.style.fontWeight=obj.weight||'normal';
+  el.style.color=obj.color||'#111827';
+  el.textContent=obj.text||'';
+}
+
+// ============================================================
+// Supabase Auth
+// ============================================================
+function initSupabase(){
+  if(window.supabase && !supaClient){
+    try{
+      supaClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      supaClient.auth.getSession().then(({data})=>{
+        if(data && data.session){ currentUser = data.session.user; updateAuthUI(); }
+      });
+      supaClient.auth.onAuthStateChange((_e, session)=>{
+        currentUser = session ? session.user : null;
+        updateAuthUI();
+      });
+    }catch(e){console.warn('Supabase init failed', e);}
+  }
+}
+function updateAuthUI(){
+  const btn = $('authBtn');
+  if(!btn) return;
+  if(currentUser){ btn.classList.add('logged-in'); btn.title = currentUser.email; }
+  else { btn.classList.remove('logged-in'); btn.title = 'تسجيل الدخول'; }
+}
+function openAuth(){
+  if(currentUser){ if(confirm('تريد تسجيل الخروج؟')) authSignOut(); return; }
+  $('authOverlay').classList.add('show');
+  $('authMsg').textContent = '';
+  $('authMsg').className = 'auth-msg';
+}
+function closeAuth(){ $('authOverlay').classList.remove('show'); }
+async function authSignIn(){
+  const email = $('authEmail').value.trim();
+  const password = $('authPassword').value;
+  const msg = $('authMsg');
+  if(!supaClient){ msg.textContent='الخدمة غير متوفرة'; msg.className='auth-msg error'; return; }
+  if(!email || !password){ msg.textContent='الرجاء إدخال البريد وكلمة المرور'; msg.className='auth-msg error'; return; }
+  msg.textContent='جاري تسجيل الدخول...'; msg.className='auth-msg';
+  const {data,error} = await supaClient.auth.signInWithPassword({email,password});
+  if(error){ msg.textContent=error.message; msg.className='auth-msg error'; }
+  else{ msg.textContent='✓ تم تسجيل الدخول بنجاح'; msg.className='auth-msg success'; toast('مرحباً '+email); setTimeout(closeAuth, 900); }
+}
+async function authSignUp(){
+  const email = $('authEmail').value.trim();
+  const password = $('authPassword').value;
+  const msg = $('authMsg');
+  if(!supaClient){ msg.textContent='الخدمة غير متوفرة'; msg.className='auth-msg error'; return; }
+  if(!email || !password){ msg.textContent='الرجاء إدخال البريد وكلمة المرور'; msg.className='auth-msg error'; return; }
+  if(password.length<6){ msg.textContent='كلمة المرور قصيرة (6 أحرف على الأقل)'; msg.className='auth-msg error'; return; }
+  msg.textContent='جاري إنشاء الحساب...'; msg.className='auth-msg';
+  const {data,error} = await supaClient.auth.signUp({email,password});
+  if(error){ msg.textContent=error.message; msg.className='auth-msg error'; }
+  else{ msg.textContent='✓ تم إنشاء الحساب! تحقق من بريدك الإلكتروني'; msg.className='auth-msg success'; }
+}
+async function authSignOut(){
+  if(!supaClient) return;
+  await supaClient.auth.signOut();
+  currentUser = null; updateAuthUI(); toast('تم تسجيل الخروج');
+}
