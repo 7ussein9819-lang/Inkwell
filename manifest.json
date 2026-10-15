@@ -1,7 +1,7 @@
 {
-  "name": "مِحْبَرَة — منشئ نماذج الأسئلة",
-  "short_name": "مِحْبَرَة",
-  "description": "أداة احترافية لإنشاء نماذج الأسئلة والاختبارات المدرسية",
+  "name": "Inkwell — Question Paper Builder",
+  "short_name": "Inkwell",
+  "description": "Professional tool for creating school question papers and exams",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./index.html",
