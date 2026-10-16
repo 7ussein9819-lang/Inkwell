@@ -3306,3 +3306,738 @@ function fillFontSelects(){
     });
   });
 }
+
+/* ============================================================
+   Editors
+   ============================================================ */
+function miniBtn(txt,title,fn){
+  const b=document.createElement('button');
+  b.type='button';
+  b.className='mini-btn';
+  b.textContent=txt;
+  b.title=title;
+  b.onclick=fn;
+  return b;
+}
+
+function updateQuestionCounter(){
+  const c=$('q-counter');
+  if(c)c.textContent=state.questions.length+'/'+MAX_QUESTIONS;
+  const btn=$('addQuestionBtn');
+  if(btn)btn.disabled=state.questions.length>=MAX_QUESTIONS;
+}
+
+function newQuestionObj(){
+  return {
+    title:'',titleStyle:defaultTitleStyle(),
+    desc:'',descStyle:defaultDescStyle(),
+    points:0,image:null,
+    ansTitle:'',ansTitleStyle:defaultAnsTitleStyle(),
+    ansAnswer:'',ansAnswerStyle:defaultAnsAnswerStyle()
+  };
+}
+
+function addQuestion(){
+  if(state.questions.length>=MAX_QUESTIONS){toast('وصلت للحد الأقصى');return;}
+  state.questions.push(newQuestionObj());
+  save();fullRender();
+}
+
+function moveQuestion(idx,dir){
+  const ni=idx+dir;
+  if(ni<0||ni>=state.questions.length)return;
+  const tmp=state.questions[idx];
+  state.questions[idx]=state.questions[ni];
+  state.questions[ni]=tmp;
+  save();fullRender();
+}
+
+function deleteQuestion(idx){
+  if(!confirm('حذف السؤال '+(idx+1)+'؟'))return;
+  state.questions.splice(idx,1);
+  save();fullRender();
+}
+
+function duplicateQuestion(idx){
+  if(state.questions.length>=MAX_QUESTIONS){toast('وصلت للحد الأقصى');return;}
+  const q=state.questions[idx];
+  state.questions.splice(idx+1,0,{
+    title:q.title||'',titleStyle:Object.assign({},q.titleStyle||defaultTitleStyle()),
+    desc:q.desc||'',descStyle:Object.assign({},q.descStyle||defaultDescStyle()),
+    points:q.points||0,image:q.image||null,
+    ansTitle:q.ansTitle||'',ansTitleStyle:Object.assign({},q.ansTitleStyle||defaultAnsTitleStyle()),
+    ansAnswer:q.ansAnswer||'',ansAnswerStyle:Object.assign({},q.ansAnswerStyle||defaultAnsAnswerStyle())
+  });
+  save();fullRender();
+  toast('تم النسخ');
+}
+
+function addTeacher(){
+  state.f.teacherList.push('');
+  save();fullRender();
+}
+
+function renderQuestionsEditor(){
+  const cont=$('questions-editor');
+  if(!cont)return;
+  cont.innerHTML='';
+  if(!state.questions.length){
+    const empty=document.createElement('div');
+    empty.style.cssText='text-align:center;color:var(--text-3);font-size:12px;padding:24px;';
+    empty.textContent='لم تضف أي سؤال بعد.';
+    cont.appendChild(empty);
+    return;
+  }
+  state.questions.forEach(function(q,i){
+    cont.appendChild(buildQuestionCard(q,i));
+  });
+}
+
+function buildFontRow(target,onChange,withLineHeight){
+  const row=document.createElement('div');
+  row.className='font-row'+(withLineHeight?' with-lh':'');
+  row.style.marginTop='5px';
+
+  const famSel=document.createElement('select');
+  FONTS.forEach(function(f){
+    const o=document.createElement('option');
+    o.value=f;o.textContent=f;
+    if(f===target.family)o.selected=true;
+    famSel.appendChild(o);
+  });
+  famSel.addEventListener('change',function(){target.family=famSel.value;onChange();});
+  row.appendChild(famSel);
+
+  const szInp=document.createElement('input');
+  szInp.type='number';
+  szInp.min=6;szInp.max=72;
+  szInp.value=target.size||12;
+  szInp.addEventListener('input',function(){
+    target.size=Number(szInp.value)||12;
+    onChange();
+  });
+  row.appendChild(szInp);
+
+  const wSel=document.createElement('select');
+  [['normal','عادي'],['bold','عريض']].forEach(function(pair){
+    const o=document.createElement('option');
+    o.value=pair[0];o.textContent=pair[1];
+    if(pair[0]===target.weight)o.selected=true;
+    wSel.appendChild(o);
+  });
+  wSel.addEventListener('change',function(){target.weight=wSel.value;onChange();});
+  row.appendChild(wSel);
+
+  const colInp=document.createElement('input');
+  colInp.type='color';
+  colInp.value=target.color||'#111827';
+  colInp.addEventListener('input',function(){target.color=colInp.value;onChange();});
+  row.appendChild(colInp);
+
+  if(withLineHeight){
+    const lhInp=document.createElement('input');
+    lhInp.type='number';
+    lhInp.min=0.8;lhInp.max=3;lhInp.step=0.1;
+    lhInp.value=target.lineHeight||1.6;
+    lhInp.addEventListener('input',function(){
+      target.lineHeight=Number(lhInp.value)||1.6;
+      onChange();
+    });
+    row.appendChild(lhInp);
+  }
+  return row;
+}
+
+function buildQuestionCard(q,idx){
+  const card=document.createElement('div');
+  card.className='q-card';
+
+  const head=document.createElement('div');
+  head.className='q-card-head';
+
+  const num=document.createElement('span');
+  num.className='num';
+  num.textContent='سؤال '+(idx+1);
+  head.appendChild(num);
+
+  const sp=document.createElement('span');
+  sp.className='spacer';
+  head.appendChild(sp);
+
+  const dup=miniBtn('⧉','نسخ',function(){duplicateQuestion(idx);});
+  head.appendChild(dup);
+
+  const up=miniBtn('▲','أعلى',function(){moveQuestion(idx,-1);});
+  if(idx===0)up.disabled=true;
+  head.appendChild(up);
+
+  const dn=miniBtn('▼','أسفل',function(){moveQuestion(idx,1);});
+  if(idx===state.questions.length-1)dn.disabled=true;
+  head.appendChild(dn);
+
+  const del=miniBtn('✕','حذف',function(){deleteQuestion(idx);});
+  head.appendChild(del);
+
+  card.appendChild(head);
+
+  const tInp=document.createElement('input');
+  tInp.type='text';
+  tInp.placeholder='عنوان السؤال...';
+  tInp.value=q.title||'';
+  tInp.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;';
+  tInp.addEventListener('input',function(){
+    q.title=tInp.value;save();schedulePaperUpdate();
+  });
+  card.appendChild(tInp);
+
+  q.titleStyle=q.titleStyle||defaultTitleStyle();
+  card.appendChild(buildFontRow(q.titleStyle,function(){save();schedulePaperUpdate();},false));
+
+  const ta=document.createElement('textarea');
+  ta.placeholder='وصف السؤال...';
+  ta.value=q.desc||'';
+  ta.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;min-height:80px;resize:vertical;font-family:inherit;margin-top:9px;';
+  ta.addEventListener('input',function(){
+    q.desc=ta.value;save();schedulePaperUpdate();
+  });
+  card.appendChild(ta);
+
+  q.descStyle=q.descStyle||defaultDescStyle();
+  card.appendChild(buildFontRow(q.descStyle,function(){save();schedulePaperUpdate();},true));
+
+  const ptsInp=document.createElement('input');
+  ptsInp.type='number';
+  ptsInp.min=0;ptsInp.max=100;
+  ptsInp.value=q.points||0;
+  ptsInp.placeholder='الدرجات';
+  ptsInp.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;margin-top:9px;';
+  ptsInp.addEventListener('input',function(){
+    q.points=Number(ptsInp.value)||0;save();schedulePaperUpdate();
+  });
+  card.appendChild(ptsInp);
+
+  return card;
+}
+
+function renderAnswersEditor(){
+  const cont=$('answers-editor');
+  if(!cont)return;
+  cont.innerHTML='';
+  if(!state.questions.length){
+    const empty=document.createElement('div');
+    empty.style.cssText='text-align:center;color:var(--text-3);font-size:12px;padding:24px;';
+    empty.textContent='أضف أسئلة أولاً.';
+    cont.appendChild(empty);
+    return;
+  }
+  state.questions.forEach(function(q,i){
+    cont.appendChild(buildAnswerCard(q,i));
+  });
+}
+
+function buildAnswerCard(q,i){
+  const card=document.createElement('div');
+  card.className='q-card';
+
+  const head=document.createElement('div');
+  head.className='q-card-head';
+  const num=document.createElement('span');
+  num.className='num';
+  num.textContent='إجابة '+(i+1);
+  head.appendChild(num);
+  card.appendChild(head);
+
+  const tInp=document.createElement('input');
+  tInp.type='text';
+  tInp.placeholder='عنوان السؤال...';
+  tInp.value=q.ansTitle||'';
+  tInp.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;';
+  tInp.addEventListener('input',function(){
+    q.ansTitle=tInp.value;save();
+    if(state.showAnswers)schedulePaperUpdate();
+  });
+  card.appendChild(tInp);
+
+  const ta=document.createElement('textarea');
+  ta.placeholder='الإجابة...';
+  ta.value=q.ansAnswer||'';
+  ta.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;min-height:60px;resize:vertical;font-family:inherit;margin-top:9px;';
+  ta.addEventListener('input',function(){
+    q.ansAnswer=ta.value;save();
+    if(state.showAnswers)schedulePaperUpdate();
+  });
+  card.appendChild(ta);
+
+  return card;
+}
+
+function renderTeachersEditor(){
+  const cont=$('teachersEditor');
+  if(!cont)return;
+  cont.innerHTML='';
+  state.f.teacherList.forEach(function(name,i){
+    const row=document.createElement('div');
+    row.className='teacher-item';
+    const inp=document.createElement('input');
+    inp.type='text';
+    inp.placeholder='اسم المعلم '+(i+1);
+    inp.value=name;
+    inp.addEventListener('input',function(){
+      state.f.teacherList[i]=inp.value;save();schedulePaperUpdate();
+    });
+    row.appendChild(inp);
+    if(state.f.teacherList.length>1){
+      const rm=miniBtn('✕','حذف',function(){
+        state.f.teacherList.splice(i,1);save();fullRender();
+      });
+      row.appendChild(rm);
+    }
+    cont.appendChild(row);
+  });
+}
+
+/* ============================================================
+   Shapes functions
+   ============================================================ */
+function selectShape(shape,editor){
+  document.querySelectorAll('.shape-block.selected').forEach(function(el){
+    el.classList.remove('selected');
+  });
+  shape.classList.add('selected');
+  selectedShape=shape;
+  selectedShapeEditor=editor;
+  const tb=$('shapeToolbar');
+  if(!tb)return;
+  tb.classList.add('open');
+}
+function hideShapeToolbar(){
+  document.querySelectorAll('.shape-block.selected').forEach(function(el){
+    el.classList.remove('selected');
+  });
+  selectedShape=null;
+  selectedShapeEditor=null;
+  const tb=$('shapeToolbar');
+  if(tb)tb.classList.remove('open');
+}
+function applyShapeScale(v){
+  if(!selectedShape)return;
+  const s=parseFloat(v)||1;
+  const bw=parseFloat(selectedShape.dataset.baseW||'100')||100;
+  const bh=parseFloat(selectedShape.dataset.baseH||'100')||100;
+  selectedShape.style.width=Math.round(bw*s)+'px';
+  selectedShape.style.height=Math.round(bh*s)+'px';
+  const el=$('stScaleVal');
+  if(el)el.textContent=Math.round(s*100)+'%';
+}
+function rotateShape(delta){
+  if(!selectedShape)return;
+  let cur=parseFloat(selectedShape.dataset.rotate||'0');
+  if(delta==='reset')cur=0;
+  else cur=cur+delta;
+  selectedShape.style.transform='rotate('+cur+'deg)';
+  const el=$('stRotVal');
+  if(el)el.textContent=cur+'°';
+}
+function setShapePosition(pos){
+  if(!selectedShape)return;
+  selectedShape.setAttribute('data-float',pos);
+  document.querySelectorAll('#shapeToolbar [data-pos]').forEach(function(b){
+    b.classList.toggle('on',b.dataset.pos===pos);
+  });
+  if(selectedShapeEditor){
+    selectedShapeEditor.dispatchEvent(new Event('input',{bubbles:true}));
+  }
+}
+function deleteSelectedShape(){
+  if(!selectedShape)return;
+  if(!confirm('حذف الشكل؟'))return;
+  selectedShape.remove();
+  hideShapeToolbar();
+}
+function showCtxMenu(anchor,editor){
+  const m=$('ctxMenu');
+  if(!m)return;
+  const r=anchor.getBoundingClientRect();
+  m.style.top=(r.bottom+6)+'px';
+  m.style.left=Math.max(6,r.left-160)+'px';
+  m._editor=editor;
+  m.classList.add('open');
+  setTimeout(function(){
+    const h=function(e){
+      if(!m.contains(e.target)){
+        m.classList.remove('open');
+        document.removeEventListener('click',h,true);
+      }
+    };
+    document.addEventListener('click',h,true);
+  },10);
+}
+function ctxAction(action){
+  const m=$('ctxMenu');
+  const editor=m._editor;
+  if(!editor)return;
+  editor.focus();
+  try{
+    if(action==='copy')document.execCommand('copy');
+    else if(action==='cut')document.execCommand('cut');
+    else if(action==='selectAll'){
+      const r=document.createRange();
+      r.selectNodeContents(editor);
+      const s=window.getSelection();
+      s.removeAllRanges();s.addRange(r);
+    }
+  }catch(e){}
+  m.classList.remove('open');
+}
+
+/* ============================================================
+   Inputs & Notes
+   ============================================================ */
+function loadStateIntoInputs(){
+  document.querySelectorAll('[data-key]').forEach(function(el){
+    const key=el.getAttribute('data-key');
+    const val=getNested(state,key);
+    if(val===undefined||val===null)return;
+    if(el.type==='checkbox')el.checked=!!val;
+    else el.value=val;
+  });
+  syncNoteAlignBtns();
+}
+
+function bindAllInputs(){
+  document.querySelectorAll('[data-key]').forEach(function(el){
+    if(el._bound)return;
+    el._bound=true;
+    const handler=function(){
+      const key=el.getAttribute('data-key');
+      let val;
+      if(el.type==='checkbox')val=el.checked;
+      else if(el.type==='number')val=Number(el.value)||0;
+      else val=el.value;
+      setNested(state,key,val);
+      save();
+      if(key==='showAnswers')fullRender();
+      else schedulePaperUpdate();
+    };
+    el.addEventListener('input',handler);
+    el.addEventListener('change',handler);
+  });
+}
+
+function syncNoteAlignBtns(){
+  const a=state.h.note.align||'center';
+  document.querySelectorAll('#noteAlignBtns button').forEach(function(b){
+    b.classList.toggle('active',b.dataset.align===a);
+  });
+}
+document.addEventListener('click',function(e){
+  const b=e.target.closest('#noteAlignBtns button');
+  if(b){
+    state.h.note.align=b.dataset.align;
+    syncNoteAlignBtns();
+    save();
+    schedulePaperUpdate();
+  }
+});
+
+/* ============================================================
+   Frame Picker
+   ============================================================ */
+function buildFramePicker(){
+  const picker=$('framePicker');
+  if(!picker)return;
+  picker.innerHTML='';
+  FRAMES.forEach(function(f){
+    const btn=document.createElement('button');
+    btn.className='frame-opt';
+    btn.dataset.frame=f.id;
+    btn.type='button';
+    btn.onclick=function(){
+      state.frame.style=f.id;
+      save();buildPages();updateFramePicker();
+    };
+    const prev=document.createElement('div');
+    prev.className='preview';
+    const box=document.createElement('div');
+    box.className='box';
+    const c=state.frame.color||'#111827';
+    if(f.id==='solid')box.style.border='1.5px solid '+c;
+    else if(f.id==='thin-solid')box.style.border='0.5px solid '+c;
+    else if(f.id==='double')box.style.border='3px double '+c;
+    else if(f.id==='thin-double'){box.style.border='1px solid '+c;box.style.boxShadow='inset 0 0 0 2px #fff, inset 0 0 0 3px '+c;}
+    else if(f.id==='triple'){box.style.border='1px solid '+c;box.style.boxShadow='0 0 0 2px #fff, 0 0 0 3px '+c+', 0 0 0 5px #fff, 0 0 0 6px '+c;}
+    else if(f.id==='dashed')box.style.border='2px dashed '+c;
+    else if(f.id==='dotted')box.style.border='2px dotted '+c;
+    else if(f.id==='thick')box.style.border='4px solid '+c;
+    else if(f.id==='elegant'){box.style.border='1px solid '+c;box.style.boxShadow='0 0 0 2px #fff, 0 0 0 3px '+c;}
+    else if(f.id==='rounded'){box.style.border='2px solid '+c;box.style.borderRadius='8px';}
+    else if(f.id==='corners'){box.style.background='linear-gradient('+c+','+c+') top right/8px 2px no-repeat,linear-gradient('+c+','+c+') top right/2px 8px no-repeat,linear-gradient('+c+','+c+') top left/8px 2px no-repeat,linear-gradient('+c+','+c+') top left/2px 8px no-repeat,linear-gradient('+c+','+c+') bottom right/8px 2px no-repeat,linear-gradient('+c+','+c+') bottom right/2px 8px no-repeat,linear-gradient('+c+','+c+') bottom left/8px 2px no-repeat,linear-gradient('+c+','+c+') bottom left/2px 8px no-repeat';}
+    else if(f.id==='top-bottom'){box.style.borderTop='3px solid '+c;box.style.borderBottom='3px solid '+c;}
+    else if(f.id==='left-right'){box.style.borderLeft='3px solid '+c;box.style.borderRight='3px solid '+c;}
+    else if(f.id==='double-thin'){box.style.border='1px solid '+c;box.style.boxShadow='inset 0 0 0 3px #fff, inset 0 0 0 4px '+c;}
+    else if(f.id==='ornate'){box.style.border='3px solid '+c;box.style.outline='1px solid '+c;box.style.outlineOffset='2px';}
+    else if(f.id==='none')box.style.border='1px dashed #cbd5e1';
+    prev.appendChild(box);
+    const label=document.createElement('span');
+    label.textContent=f.label;
+    btn.appendChild(prev);
+    btn.appendChild(label);
+    picker.appendChild(btn);
+  });
+}
+function updateFramePicker(){
+  document.querySelectorAll('.frame-opt').forEach(function(el){
+    el.classList.toggle('active',el.dataset.frame===state.frame.style);
+  });
+}
+function removeWatermarkImage(){
+  state.wm.image=null;
+  save();buildPages();
+  toast('تم الحذف');
+}
+
+/* ============================================================
+   Export / Import / Backup
+   ============================================================ */
+function doPrint(){
+  closeMenu();
+  switchView('preview');
+  setTimeout(function(){window.print();},250);
+}
+
+function exportPDF(){
+  closeMenu();
+  switchView('preview');
+  setTimeout(function(){
+    if(!window.html2pdf){
+      toast('مكتبة PDF غير متوفرة');
+      window.print();
+      return;
+    }
+    toast('جاري تجهيز PDF...');
+    const el=$('paper')||document.querySelector('.page');
+    if(!el)return;
+    const opt={
+      margin:0,
+      filename:'inkwell-paper.pdf',
+      image:{type:'jpeg',quality:0.98},
+      html2canvas:{
+        scale:2,
+        useCORS:true,
+        scrollX:0,
+        scrollY:0,
+        windowWidth:el.scrollWidth,
+        windowHeight:el.scrollHeight
+      },
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+      pagebreak:{mode:['css','legacy']}
+    };
+    window.html2pdf().set(opt).from(el).save()
+      .then(function(){toast('تم حفظ PDF ✅');})
+      .catch(function(){toast('صار خطأ، جاري الطباعة');window.print();});
+  },250);
+}
+
+function exportWord(){
+  closeMenu();
+  const container=$('pages-container');
+  if(!container)return;
+  const pages=container.querySelectorAll('.page');
+  let bodyHtml='';
+  pages.forEach(function(p){
+    const clone=p.cloneNode(true);
+    clone.querySelectorAll('input.shape-lbl').forEach(function(inp){
+      const sp=document.createElement('span');
+      sp.className='shape-lbl';
+      sp.style.cssText=inp.style.cssText;
+      sp.style.width='auto';
+      sp.style.height='auto';
+      sp.textContent=inp.value||'';
+      inp.replaceWith(sp);
+    });
+    bodyHtml+='<div style="page-break-after:always;">'+clone.innerHTML+'</div>';
+  });
+  const styles='@page{size:A4;margin:0;}body{font-family:Arial,sans-serif;direction:rtl;}'
+    +'.page-content{padding:12mm;box-sizing:border-box;}'
+    +'.header-grid{display:table;width:100%;table-layout:fixed;border-collapse:collapse;}'
+    +'.hcol{display:table-cell;vertical-align:top;width:33%;padding:2px;}'
+    +'.hcol-center{text-align:center;}.hcol-left{text-align:left;}'
+    +'.header-line{border-top:2px solid #000;margin:6px 0;}'
+    +'.header-extra,.header-note{text-align:center;}'
+    +'.footer-grid{display:table;width:100%;table-layout:fixed;margin-top:20px;}'
+    +'.fcol{display:table-cell;width:33%;padding:2px;}'
+    +'.footer-wish{text-align:center;}'
+    +'.q-item{margin-bottom:8px;}'
+    +'.watermark{display:none;}'
+    +'.q-head-row{display:flex;justify-content:space-between;align-items:baseline;}'
+    +'.content-table{border-collapse:collapse;width:100%;}'
+    +'.content-table td,.content-table th{border:1px solid #000;padding:4px 8px;text-align:center;}';
+  const html='<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="ar"><head><meta charset="utf-8"><title>Inkwell</title><style>'+styles+'</style></head><body>'+bodyHtml+'</body></html>';
+  const blob=new Blob(['\ufeff',html],{type:'application/msword'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='inkwell-paper.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  toast('تم حفظ Word ✅');
+}
+
+function backup(){
+  closeMenu();
+  const data=JSON.stringify(state,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='inkwell-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  toast('تم حفظ نسخة 💾');
+}
+
+function triggerImport(){
+  closeMenu();
+  const el=$('importFile');
+  if(el)el.click();
+}
+
+function migrateQuestion(q){
+  if(q.desc===undefined)q.desc=q.text||'';
+  if(q.title===undefined)q.title='';
+  if(!q.titleStyle)q.titleStyle={family:q.family||'Arial',size:q.size||14,weight:q.weight||'bold',color:q.color||'#111827'};
+  if(!q.descStyle)q.descStyle={family:q.family||'Arial',size:q.size||14,weight:q.weight||'normal',color:q.color||'#111827',lineHeight:1.6};
+  if(q.points===undefined)q.points=0;
+  if(q.image===undefined)q.image=null;
+  if(!q.ansTitleStyle)q.ansTitleStyle={family:q.family||'Arial',size:q.size||14,weight:'bold',color:q.color||'#111827'};
+  if(!q.ansAnswerStyle)q.ansAnswerStyle={family:q.family||'Arial',size:q.size||14,weight:'normal',color:q.color||'#111827',lineHeight:1.7};
+  if(q.ansTitle===undefined)q.ansTitle='';
+  if(q.ansAnswer===undefined)q.ansAnswer=q.answer||'';
+  delete q.family;delete q.size;delete q.weight;delete q.color;delete q.text;delete q.answer;
+  return q;
+}
+
+function restore(input){
+  const f=input.files&&input.files[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=function(e){
+    try{
+      const d=JSON.parse(e.target.result);
+      if(!d||!d.h||!Array.isArray(d.questions))throw new Error('bad');
+      state=deepMerge(JSON.parse(JSON.stringify(defaultState)),d);
+      state.questions=state.questions.map(migrateQuestion);
+      if(!state.h.note.align)state.h.note.align='center';
+      if(!state.h.lineColor)state.h.lineColor='#111827';
+      loadStateIntoInputs();
+      fullRender();
+      save();
+      switchView('preview');
+      toast('تم الاستيراد ✅');
+    }catch(err){
+      toast('الملف غير صالح ❌');
+    }
+  };
+  r.readAsText(f);
+  input.value='';
+}
+
+function clearAll(){
+  closeMenu();
+  if(!confirm('حذف كل الأسئلة؟'))return;
+  state.questions=[];
+  save();
+  fullRender();
+  toast('تم الحذف 🗑️');
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+function boot(){
+  try{
+    const t=localStorage.getItem(THEME_KEY);
+    if(t==='dark'||t==='light'){
+      document.documentElement.setAttribute('data-theme',t);
+    }
+  }catch(e){}
+
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const loaded=JSON.parse(raw);
+      if(loaded&&loaded.h&&Array.isArray(loaded.questions)){
+        state=deepMerge(JSON.parse(JSON.stringify(defaultState)),loaded);
+      }
+    }
+  }catch(e){}
+
+  if(!state.h.note)state.h.note={text:'',align:'center',family:'Arial',size:14,weight:'bold',color:'#111827'};
+  if(!state.h.note.align)state.h.note.align='center';
+  if(!state.h.lineColor)state.h.lineColor='#111827';
+
+  state.questions=state.questions.map(migrateQuestion);
+
+  fillFontSelects();
+  loadStateIntoInputs();
+  bindAllInputs();
+  buildFramePicker();
+  initSupabase();
+
+  const wmInput=$('wmImageInput');
+  if(wmInput){
+    wmInput.addEventListener('change',function(){
+      const f=wmInput.files&&wmInput.files[0];
+      if(!f)return;
+      if(f.size>3*1024*1024){toast('الصورة كبيرة');wmInput.value='';return;}
+      const reader=new FileReader();
+      reader.onload=function(e){
+        state.wm.image=e.target.result;
+        state.wm.type='image';
+        save();
+        loadStateIntoInputs();
+        buildPages();
+        toast('تم الرفع ✅');
+      };
+      reader.readAsDataURL(f);
+      wmInput.value='';
+    });
+  }
+
+  document.querySelectorAll('.navbtn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      switchView(btn.getAttribute('data-view'));
+    });
+  });
+  document.querySelectorAll('.subtab').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      switchSub(tab.getAttribute('data-sub'));
+    });
+  });
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('.menu-wrap'))closeMenu();
+  });
+
+  fullRender();
+  window.addEventListener('beforeprint',function(){switchView('preview');});
+  setTimeout(fitPages,300);
+  setTimeout(fitPages,1000);
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',boot);
+}else{
+  boot();
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./service-worker.js').catch(function(){});
+  });
+}
+</script>
+
+</body>
+</html>
