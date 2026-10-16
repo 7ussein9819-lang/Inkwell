@@ -2040,3 +2040,444 @@ html[data-theme="dark"] .auth-google:hover{background:var(--bg-2);}
 }
 </style>
 </head>
+
+<body>
+
+<header class="topbar no-print">
+  <div class="brand">
+    <div class="brand-icon">📝</div>
+    <div class="brand-text">
+      <b>Inkwell</b>
+      <small id="topbar-sub">صفحة المعاينة</small>
+    </div>
+  </div>
+
+  <a class="tg-badge" href="https://t.me/HJS_98" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121L7.68 13.535 4.74 12.62c-.631-.198-.642-.631.131-.933l11.59-4.466c.53-.19 1.007.13.833 1z"/></svg>
+    <span>@HJS_98</span>
+  </a>
+
+  <div class="topbar-actions">
+    <button class="icon-btn" onclick="toggleTheme()" title="تبديل الوضع">
+      <svg class="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="icon-btn" onclick="doPrint()" title="طباعة">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    </button>
+    <button class="icon-btn auth-btn" id="authBtn" onclick="openAuth()" title="تسجيل الدخول">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </button>
+    <div class="menu-wrap">
+      <button class="icon-btn" onclick="toggleMenu(event)" title="المزيد">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+      </button>
+      <div class="menu" id="moreMenu">
+        <button onclick="exportPDF()"><span class="mi">📄</span> تصدير PDF</button>
+        <button onclick="exportWord()"><span class="mi">📝</span> تصدير Word</button>
+        <hr>
+        <button onclick="backup()"><span class="mi">💾</span> نسخة احتياطية</button>
+        <button onclick="triggerImport()"><span class="mi">📂</span> استيراد</button>
+        <hr>
+        <button class="danger" onclick="clearAll()"><span class="mi">🗑️</span> حذف الكل</button>
+      </div>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="restore(this)">
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="view active" id="view-preview">
+    <div class="preview-outer">
+      <div class="preview-wrap" id="pages-container"></div>
+    </div>
+  </section>
+
+  <section class="view control-panel" id="view-control">
+    <div class="subtabs no-print">
+      <button class="subtab active" data-sub="header"><span class="em">📄</span> الترويسة</button>
+      <button class="subtab" data-sub="questions"><span class="em">📝</span> الأسئلة</button>
+      <button class="subtab" data-sub="answers"><span class="em">✅</span> الإجابات</button>
+      <button class="subtab" data-sub="footer"><span class="em">📌</span> التذييل</button>
+      <button class="subtab" data-sub="watermark"><span class="em">💧</span> مائية</button>
+      <button class="subtab" data-sub="design"><span class="em">🎨</span> التصميم</button>
+      <button class="subtab" data-sub="tools"><span class="em">🧰</span> أدوات</button>
+    </div>
+
+    <div class="subview active" id="sub-header">
+      <div class="card">
+        <h3><span class="em">📍</span> الجهة اليمنى</h3>
+        <div class="field-group">
+          <label>الحقل الأول — اسم المدرسة</label>
+          <input type="text" data-key="h.school.text">
+          <div class="font-row">
+            <select data-key="h.school.family" data-font></select>
+            <input type="number" data-key="h.school.size" min="8" max="72">
+            <select data-key="h.school.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.school.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>الحقل الثاني — المديرية</label>
+          <input type="text" data-key="h.dir.text">
+          <div class="font-row">
+            <select data-key="h.dir.family" data-font></select>
+            <input type="number" data-key="h.dir.size" min="8" max="72">
+            <select data-key="h.dir.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.dir.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>الحقل الثالث — نص حر</label>
+          <input type="text" data-key="h.rightExtra.text" placeholder="اختياري...">
+          <div class="font-row">
+            <select data-key="h.rightExtra.family" data-font></select>
+            <input type="number" data-key="h.rightExtra.size" min="8" max="72">
+            <select data-key="h.rightExtra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.rightExtra.color">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="em">🎯</span> الوسط</h3>
+        <div class="field-group">
+          <label>العنوان الرئيسي</label>
+          <input type="text" data-key="h.subject.text">
+          <div class="font-row">
+            <select data-key="h.subject.family" data-font></select>
+            <input type="number" data-key="h.subject.size" min="8" max="72">
+            <select data-key="h.subject.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.subject.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>السطر الثاني</label>
+          <input type="text" data-key="h.year.text">
+          <div class="font-row">
+            <select data-key="h.year.family" data-font></select>
+            <input type="number" data-key="h.year.size" min="8" max="72">
+            <select data-key="h.year.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.year.color">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="em">📎</span> الجهة اليسرى</h3>
+        <div class="field-group">
+          <label>الوقت</label>
+          <input type="text" data-key="h.time.text">
+          <div class="font-row">
+            <select data-key="h.time.family" data-font></select>
+            <input type="number" data-key="h.time.size" min="8" max="72">
+            <select data-key="h.time.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.time.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>المادة</label>
+          <input type="text" data-key="h.subjectLeft.text">
+          <div class="font-row">
+            <select data-key="h.subjectLeft.family" data-font></select>
+            <input type="number" data-key="h.subjectLeft.size" min="8" max="72">
+            <select data-key="h.subjectLeft.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.subjectLeft.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>الصف</label>
+          <input type="text" data-key="h.grade.text">
+          <div class="font-row">
+            <select data-key="h.grade.family" data-font></select>
+            <input type="number" data-key="h.grade.size" min="8" max="72">
+            <select data-key="h.grade.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.grade.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>نص حر</label>
+          <input type="text" data-key="h.leftExtra.text" placeholder="اختياري...">
+          <div class="font-row">
+            <select data-key="h.leftExtra.family" data-font></select>
+            <input type="number" data-key="h.leftExtra.size" min="8" max="72">
+            <select data-key="h.leftExtra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.leftExtra.color">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="em">➖</span> الخط الفاصل</h3>
+        <div class="field-group">
+          <label>لون الخط الفاصل</label>
+          <input type="color" data-key="h.lineColor" style="height:38px;">
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="em">📌</span> الملاحظة</h3>
+        <div class="field-group">
+          <label>نص الملاحظة</label>
+          <input type="text" data-key="h.note.text">
+          <div class="font-row">
+            <select data-key="h.note.family" data-font></select>
+            <input type="number" data-key="h.note.size" min="8" max="72">
+            <select data-key="h.note.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.note.color">
+          </div>
+          <label style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text-3);">المحاذاة</label>
+          <div class="align-btns" id="noteAlignBtns">
+            <button data-align="right">يمين</button>
+            <button data-align="center">وسط</button>
+            <button data-align="left">يسار</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="em">➕</span> حقل عام إضافي</h3>
+        <label class="toggle-row">
+          <input type="checkbox" data-key="h.extra.enabled">
+          <span>تفعيل الحقل الإضافي</span>
+        </label>
+        <div class="field-group">
+          <label>النص</label>
+          <input type="text" data-key="h.extra.text">
+          <div class="font-row">
+            <select data-key="h.extra.family" data-font></select>
+            <input type="number" data-key="h.extra.size" min="8" max="72">
+            <select data-key="h.extra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="h.extra.color">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subview" id="sub-questions">
+      <div class="card">
+        <h3>
+          <span class="em">📝</span> الأسئلة
+          <span id="q-counter" style="font-size:11px;color:var(--text-3);font-weight:700;margin-inline-start:auto;background:var(--accent-light);padding:3px 10px;border-radius:12px;">0/10</span>
+        </h3>
+        <button class="add-q-btn" id="addQuestionBtn" onclick="addQuestion()">
+          <span style="font-size:15px;">➕</span> إضافة سؤال جديد
+        </button>
+        <p class="hint">🔣 صيغ رياضية · ∑ رموز · ⬛ أشكال · 📊 جدول · ⋯ نسخ/لصق</p>
+      </div>
+      <div id="questions-editor"></div>
+    </div>
+
+    <div class="subview" id="sub-answers">
+      <div class="card">
+        <h3><span class="em">✅</span> صفحة الإجابات</h3>
+        <label class="toggle-row">
+          <input type="checkbox" data-key="showAnswers">
+          <span>إظهار صفحة الإجابات</span>
+        </label>
+        <div class="field-group">
+          <label>عنوان الصفحة</label>
+          <input type="text" data-key="answerTitle">
+        </div>
+      </div>
+      <div id="answers-editor"></div>
+    </div>
+
+    <div class="subview" id="sub-footer">
+      <div class="card">
+        <h3><span class="em">💬</span> العبارة العلوية</h3>
+        <div class="field-group">
+          <label>النص</label>
+          <input type="text" data-key="f.wish.text">
+          <div class="font-row">
+            <select data-key="f.wish.family" data-font></select>
+            <input type="number" data-key="f.wish.size" min="8" max="72">
+            <select data-key="f.wish.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="f.wish.color">
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="em">👥</span> أسماء المعلمين</h3>
+        <div id="teachersEditor"></div>
+        <button class="btn blue sm" onclick="addTeacher()" style="margin-top:8px;">➕ إضافة معلم</button>
+        <div class="field-group" style="margin-top:12px;">
+          <label>خط الأسماء</label>
+          <div class="font-row">
+            <select data-key="f.teachers.family" data-font></select>
+            <input type="number" data-key="f.teachers.size" min="8" max="72">
+            <select data-key="f.teachers.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="f.teachers.color">
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="em">📊</span> الصف السفلي</h3>
+        <div class="field-group">
+          <label>الوسط</label>
+          <input type="text" data-key="f.center.text">
+          <div class="font-row">
+            <select data-key="f.center.family" data-font></select>
+            <input type="number" data-key="f.center.size" min="8" max="72">
+            <select data-key="f.center.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="f.center.color">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>اليسار</label>
+          <input type="text" data-key="f.left.text">
+          <div class="font-row">
+            <select data-key="f.left.family" data-font></select>
+            <input type="number" data-key="f.left.size" min="8" max="72">
+            <select data-key="f.left.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+            <input type="color" data-key="f.left.color">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subview" id="sub-watermark">
+      <div class="card">
+        <h3><span class="em">💧</span> العلامة المائية</h3>
+        <div class="field-group">
+          <label>النوع</label>
+          <select data-key="wm.type"><option value="none">بدون</option><option value="text">نص</option><option value="image">صورة</option></select>
+        </div>
+        <div class="field-group"><label>النص</label><input type="text" data-key="wm.text"></div>
+        <div class="field-group">
+          <label>صورة</label>
+          <input type="file" id="wmImageInput" accept="image/*" style="border:1.5px solid var(--border-strong);border-radius:8px;padding:8px;background:var(--bg-1);font-size:12px;">
+          <button class="btn ghost sm" onclick="removeWatermarkImage()" style="margin-top:6px;">حذف الصورة</button>
+        </div>
+        <div class="field-group"><label>الحجم</label><input type="number" data-key="wm.size" min="20" max="400"></div>
+        <div class="field-group"><label>اللون</label><input type="color" data-key="wm.color" style="width:60px;height:38px;border:1.5px solid var(--border-strong);border-radius:8px;padding:2px;background:var(--bg-1);cursor:pointer;"></div>
+        <div class="field-group"><label>الشفافية</label><input type="number" data-key="wm.opacity" min="0.01" max="1" step="0.05"></div>
+        <div class="field-group"><label>الدوران</label><input type="number" data-key="wm.rotate" min="-90" max="90" step="5"></div>
+      </div>
+    </div>
+
+    <div class="subview" id="sub-design">
+      <div class="card">
+        <h3><span class="em">🌓</span> الوضع</h3>
+        <div class="theme-picker">
+          <button class="theme-opt" data-theme-pick="light" onclick="setTheme('light')">☀️ فاتح</button>
+          <button class="theme-opt" data-theme-pick="dark" onclick="setTheme('dark')">🌙 داكن</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="em">🖼️</span> إطار الورقة</h3>
+        <div class="frame-picker" id="framePicker"></div>
+        <div class="field-group" style="margin-top:12px;">
+          <label>لون الإطار</label>
+          <input type="color" data-key="frame.color" style="height:38px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="subview" id="sub-tools">
+      <div class="card">
+        <h3><span class="em">💾</span> التصدير</h3>
+        <div class="tools-grid">
+          <button class="tool-btn" onclick="exportPDF()"><span class="em">📄</span> PDF</button>
+          <button class="tool-btn" onclick="exportWord()"><span class="em">📝</span> Word</button>
+          <button class="tool-btn" onclick="backup()"><span class="em">💾</span> نسخة احتياطية</button>
+          <button class="tool-btn" onclick="triggerImport()"><span class="em">📂</span> استيراد</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="em">⚠️</span> منطقة الخطر</h3>
+        <div class="tools-grid">
+          <button class="tool-btn danger" onclick="clearAll()"><span class="em">🗑️</span> حذف الكل</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="zoom-ctrl no-print" id="zoomCtrl">
+  <button onclick="changeZoom(-0.1)">−</button>
+  <span class="pct" id="zoomPct">100%</span>
+  <button onclick="changeZoom(0.1)">+</button>
+</div>
+
+<nav class="bottomnav no-print">
+  <button class="navbtn active" data-view="preview">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    المعاينة
+  </button>
+  <button class="navbtn" data-view="control">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+    التحكم
+  </button>
+</nav>
+
+<div class="auth-overlay" id="authOverlay" onclick="if(event.target===this)closeAuth()">
+  <div class="auth-modal">
+    <button class="auth-close-x" onclick="closeAuth()" title="إغلاق">✕</button>
+    <div class="auth-header">
+      <div class="auth-icon">📝</div>
+      <h2 class="auth-title" id="authTitle">مرحباً بك في Inkwell</h2>
+      <p class="auth-sub" id="authSub">سجّل دخولك لحفظ نماذجك على السحابة والوصول إليها من أي جهاز</p>
+    </div>
+
+    <button class="auth-google" id="googleBtn" onclick="authGoogle()" type="button">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+      <span>المتابعة عبر Google</span>
+    </button>
+
+    <div class="auth-divider">أو باستخدام البريد الإلكتروني</div>
+
+    <input type="email" class="auth-input" id="authEmail" placeholder="البريد الإلكتروني" autocomplete="email">
+    <input type="password" class="auth-input" id="authPassword" placeholder="كلمة المرور" autocomplete="current-password">
+
+    <div class="auth-actions">
+      <button class="auth-btn-primary" onclick="authSignIn()" id="signInBtn">دخول</button>
+      <button class="auth-btn-ghost" onclick="authSignUp()" id="signUpBtn">حساب جديد</button>
+    </div>
+
+    <div class="auth-msg" id="authMsg"></div>
+
+    <p class="auth-footer">
+      بالمتابعة، أنت توافق على
+      <a href="#">شروط الاستخدام</a> و <a href="#">سياسة الخصوصية</a>
+    </p>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="save-ind">✓ تم الحفظ</div>
+
+<div class="shape-toolbar no-print" id="shapeToolbar">
+  <div class="st-row">
+    <span class="st-label">📏 الحجم</span>
+    <input type="range" min="0.4" max="3" step="0.05" id="stScale" oninput="applyShapeScale(this.value)">
+    <span class="st-value" id="stScaleVal">100%</span>
+  </div>
+  <div class="st-row">
+    <span class="st-label">🔄 الدوران</span>
+    <button onclick="rotateShape(-15)">−15°</button>
+    <button onclick="rotateShape(15)">+15°</button>
+    <span class="st-value" id="stRotVal">0°</span>
+    <button onclick="rotateShape('reset')">↺</button>
+  </div>
+  <div class="st-divider"></div>
+  <div class="st-row">
+    <span class="st-label">📍 الموقع</span>
+    <button data-pos="inline" onclick="setShapePosition('inline')">داخل النص</button>
+    <button data-pos="left" onclick="setShapePosition('left')">يسار</button>
+    <button data-pos="center" onclick="setShapePosition('center')">وسط</button>
+    <button data-pos="right" onclick="setShapePosition('right')">يمين</button>
+  </div>
+  <div class="st-divider"></div>
+  <div class="st-row">
+    <button class="del" style="flex:1;" onclick="deleteSelectedShape()">🗑️ حذف الشكل</button>
+  </div>
+</div>
+
+<div class="ctx-menu" id="ctxMenu">
+  <button onclick="ctxAction('copy')"><span>📋</span> نسخ</button>
+  <button onclick="ctxAction('cut')"><span>✂️</span> قص</button>
+  <button onclick="ctxAction('paste')"><span>📥</span> لصق</button>
+  <hr>
+  <button onclick="ctxAction('selectAll')"><span>🔘</span> تحديد الكل</button>
+</div>
