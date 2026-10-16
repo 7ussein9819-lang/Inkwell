@@ -14,29 +14,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ============================================================
-   Inkwell — Modern Design System
+   Inkwell — Design System v18
    ============================================================ */
 :root{
   /* Backgrounds — Cool & Eye-friendly */
-  --bg-0:#e8edf5;
-  --bg-1:#f4f7fc;
-  --bg-2:#eef2f9;
-  --bg-3:#dde5f0;
+  --bg-0:#e6ecf5;
+  --bg-1:#eef3fa;
+  --bg-2:#e3eaf5;
+  --bg-3:#d4dde9;
   --bg-paper:#ffffff;
-  --glass:rgba(244,247,252,.85);
+  --glass:rgba(238,243,250,.88);
   /* Text */
   --text-1:#0a1020;
   --text-2:#475569;
   --text-3:#94a3b8;
   /* Borders */
-  --border:#dde5f0;
-  --border-strong:#c4cfe0;
+  --border:#d4dde9;
+  --border-strong:#b8c4d6;
   /* Accent — Teal */
   --accent:#0d9488;
   --accent-hover:#0f766e;
-  --accent-light:#e6f7f5;
-  --accent-ring:rgba(13,148,136,.18);
-  --accent-glow:rgba(13,148,136,.32);
+  --accent-light:#d9f2ef;
+  --accent-ring:rgba(13,148,136,.20);
+  --accent-glow:rgba(13,148,136,.35);
   --accent-gradient:linear-gradient(135deg,#0d9488,#14b8a6);
   /* Status */
   --success:#10b981;
@@ -46,13 +46,13 @@
   --warning:#f59e0b;
   --warning-light:#fef3c7;
   /* Shadows */
-  --shadow-xs:0 1px 2px rgba(11,18,32,.04);
-  --shadow-sm:0 1px 3px rgba(11,18,32,.06),0 1px 2px rgba(11,18,32,.04);
-  --shadow:0 4px 16px rgba(11,18,32,.08);
-  --shadow-md:0 8px 24px rgba(11,18,32,.10);
-  --shadow-lg:0 16px 40px rgba(11,18,32,.14);
-  --shadow-xl:0 24px 60px rgba(11,18,32,.18);
-  --shadow-paper:0 14px 50px rgba(11,18,32,.16);
+  --shadow-xs:0 1px 2px rgba(11,18,32,.05);
+  --shadow-sm:0 2px 4px rgba(11,18,32,.07),0 1px 2px rgba(11,18,32,.05);
+  --shadow:0 4px 16px rgba(11,18,32,.10);
+  --shadow-md:0 8px 24px rgba(11,18,32,.12);
+  --shadow-lg:0 16px 40px rgba(11,18,32,.16);
+  --shadow-xl:0 24px 60px rgba(11,18,32,.20);
+  --shadow-paper:0 14px 50px rgba(11,18,32,.18);
   /* Radii */
   --radius-sm:10px;
   --radius:14px;
@@ -73,7 +73,7 @@ html[data-theme="dark"]{
   --bg-2:#141d31;
   --bg-3:#1f2a42;
   --bg-paper:#ffffff;
-  --glass:rgba(13,21,38,.85);
+  --glass:rgba(13,21,38,.88);
   --text-1:#f1f5f9;
   --text-2:#cbd5e1;
   --text-3:#64748b;
@@ -82,21 +82,21 @@ html[data-theme="dark"]{
   --accent:#14b8a6;
   --accent-hover:#0d9488;
   --accent-light:#042f2e;
-  --accent-ring:rgba(20,184,166,.24);
-  --accent-glow:rgba(20,184,166,.45);
+  --accent-ring:rgba(20,184,166,.26);
+  --accent-glow:rgba(20,184,166,.5);
   --accent-gradient:linear-gradient(135deg,#14b8a6,#0d9488);
   --success-light:#064e3b;
   --danger-light:#7f1d1d;
   --warning-light:#78350f;
   --shadow-xs:0 1px 2px rgba(0,0,0,.4);
-  --shadow-sm:0 1px 3px rgba(0,0,0,.5);
+  --shadow-sm:0 2px 4px rgba(0,0,0,.5);
   --shadow:0 4px 16px rgba(0,0,0,.45);
   --shadow-md:0 8px 24px rgba(0,0,0,.5);
   --shadow-lg:0 16px 40px rgba(0,0,0,.55);
   --shadow-xl:0 24px 60px rgba(0,0,0,.65);
   --shadow-paper:0 14px 50px rgba(0,0,0,.7);
 }
-
+   
 /* ============================================================
    Reset
    ============================================================ */
@@ -181,7 +181,21 @@ button,input,select,textarea{
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
 }
-
+@keyframes staggerIn{
+  from{opacity:0;transform:translateY(20px) scale(.95);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+@keyframes checkmark{
+  0%{stroke-dashoffset:24;}
+  100%{stroke-dashoffset:0;}
+}
+@keyframes heartBeat{
+  0%,100%{transform:scale(1);}
+  25%{transform:scale(1.15);}
+  50%{transform:scale(1);}
+  75%{transform:scale(1.1);}
+}
+   
 /* ============================================================
    Topbar
    ============================================================ */
@@ -279,7 +293,6 @@ button,input,select,textarea{
 html[data-theme="light"] .icon-btn .icon-dark{display:none;}
 html[data-theme="dark"] .icon-btn .icon-light{display:none;}
 
-/* Auth button state */
 .auth-btn.logged-in{color:var(--success);}
 .auth-btn.logged-in::after{
   content:'';
@@ -339,7 +352,7 @@ html[data-theme="dark"] .icon-btn .icon-light{display:none;}
   display:inline-flex;
   align-items:center;justify-content:center;
 }
-
+   
 /* ============================================================
    Main Content
    ============================================================ */
@@ -496,7 +509,7 @@ main{
   opacity:1;
   transform:translateX(-50%) translateY(0) scale(1);
 }
-
+   
 /* ============================================================
    Preview Area
    ============================================================ */
@@ -531,12 +544,8 @@ main{
   border-radius:2px;
 }
 .page:hover{
-  box-shadow:0 20px 70px rgba(11,18,32,.22);
+  box-shadow:0 20px 70px rgba(11,18,32,.24);
 }
-
-/* ============================================================
-   Page Content + Main
-   ============================================================ */
 .page-content{
   position:relative;z-index:2;
   display:flex;flex-direction:column;
@@ -545,7 +554,7 @@ main{
 .page-main{flex:1;min-height:0;}
 
 /* ============================================================
-   Watermark — Fixed horizontal by default (0°)
+   Watermark — horizontal by default
    ============================================================ */
 .watermark{
   position:absolute;inset:0;z-index:1;
@@ -554,17 +563,14 @@ main{
 }
 .watermark-text{
   font-weight:bold;white-space:nowrap;
-  transform:rotate(0deg);
-  /* rotation controlled by JS */
 }
 .watermark-img{
   max-width:80%;max-height:80%;
   object-fit:contain;
-  transform:rotate(0deg);
 }
 
 /* ============================================================
-   Frames — 16 different styles
+   Frames — 16 styles
    ============================================================ */
 .page-frame{
   position:absolute;inset:5mm;
@@ -646,7 +652,7 @@ main{
   border-left:3px solid var(--frame-c,#000);
   border-right:3px solid var(--frame-c,#000);
 }
-
+   
 /* ============================================================
    Page Header (top of paper)
    ============================================================ */
@@ -779,7 +785,7 @@ main{
 .footer-teachers{
   display:flex;flex-direction:column;gap:1px;
 }
-
+   
 /* ============================================================
    Math Formulas
    ============================================================ */
@@ -852,7 +858,7 @@ main{
 }
 
 /* ============================================================
-   Shapes — with editable labels
+   Shapes
    ============================================================ */
 .shape-block{
   position:relative;
@@ -868,10 +874,6 @@ main{
   display:block;width:100%;height:100%;
   pointer-events:none;
 }
-
-/* ============================================================
-   Shape Position Modes
-   ============================================================ */
 .shape-block[data-float="inline"]{
   display:inline-block;
   margin:6px 4px;float:none;
@@ -895,10 +897,6 @@ main{
   box-shadow:0 0 0 2px var(--accent);
   border-radius:3px;
 }
-
-/* ============================================================
-   Shape Labels (inputs for editing)
-   ============================================================ */
 .shape-lbl{
   position:absolute;
   text-align:center;
@@ -935,7 +933,7 @@ input.shape-lbl:focus{
   border:none;
   color:inherit;
 }
-
+   
 /* ============================================================
    Content Tables
    ============================================================ */
@@ -1015,9 +1013,9 @@ input.shape-lbl:focus{
   box-shadow:var(--shadow-sm);
   border:1px solid var(--border);
   transition:box-shadow .35s var(--ease);
-  animation:fadeInUp .45s var(--ease) backwards;
+  animation:staggerIn .45s var(--ease) backwards;
 }
-.card:hover{box-shadow:var(--shadow);}
+.card:hover{box-shadow:var(--shadow-md);}
 .card h3{
   margin:0 0 14px;
   font-size:14px;
@@ -1032,7 +1030,7 @@ input.shape-lbl:focus{
   color:var(--text-3);
   line-height:1.75;
 }
-
+   
 /* ============================================================
    Field Groups
    ============================================================ */
@@ -1122,7 +1120,7 @@ input.shape-lbl:focus{
   .font-row{grid-template-columns:1fr 48px 68px 36px;}
   .font-row.with-lh{grid-template-columns:1.2fr 46px 66px 34px 44px;}
 }
-
+  
 /* ============================================================
    Buttons
    ============================================================ */
@@ -1192,7 +1190,7 @@ input.shape-lbl:focus{
 }
 
 /* ============================================================
-   Mini Buttons (icon buttons in cards)
+   Mini Buttons
    ============================================================ */
 .mini-btn{
   width:34px;height:34px;
@@ -1217,6 +1215,31 @@ input.shape-lbl:focus{
 .mini-btn.danger:hover{background:var(--danger-light);}
 
 /* ============================================================
+   Add Question Button
+   ============================================================ */
+.add-q-btn{
+  width:100%;
+  border:2px dashed var(--border-strong);
+  background:var(--bg-2);
+  padding:16px;
+  border-radius:var(--radius);
+  cursor:pointer;
+  font-size:13px;font-weight:800;
+  color:var(--text-2);
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;
+  transition:all .32s var(--ease);
+}
+.add-q-btn:hover:not(:disabled){
+  border-color:var(--accent);
+  background:var(--accent-light);
+  color:var(--accent);
+  border-style:solid;
+  transform:translateY(-2px);
+}
+.add-q-btn:active:not(:disabled){transform:scale(.98);}
+.add-q-btn:disabled{opacity:.5;cursor:not-allowed;} 
+/* ============================================================
    Question Cards (editor)
    ============================================================ */
 .q-card{
@@ -1226,11 +1249,11 @@ input.shape-lbl:focus{
   padding:14px;
   margin-bottom:12px;
   transition:all .32s var(--ease);
-  animation:fadeInUp .4s var(--ease) backwards;
+  animation:staggerIn .4s var(--ease) backwards;
 }
 .q-card:hover{
   border-color:var(--accent);
-  box-shadow:0 10px 30px rgba(13,148,136,.12);
+  box-shadow:0 10px 30px rgba(13,148,136,.14);
   transform:translateY(-2px);
 }
 .q-card-head{
@@ -1306,13 +1329,25 @@ input.shape-lbl:focus{
   font-size:12px;
   cursor:pointer;outline:none;
 }
+.rich-toolbar input[type="color"]{
+  width:32px;height:32px;
+  padding:2px;
+  border-radius:7px;
+  border:1px solid var(--border);
+  background:var(--bg-1);
+  cursor:pointer;
+}
+.rich-toolbar input[type="color"]::-webkit-color-swatch-wrapper{padding:0;}
+.rich-toolbar input[type="color"]::-webkit-color-swatch{
+  border:none;border-radius:5px;
+}
 .rich-toolbar .sep{
   width:1px;height:20px;
   background:var(--border);
   margin:0 3px;
 }
 .rich-editor{
-  min-height:80px;
+  min-height:90px;
   padding:12px;outline:none;
   font-family:Arial,sans-serif;
   font-size:14px;line-height:1.7;
@@ -1328,9 +1363,9 @@ input.shape-lbl:focus{
   color:var(--text-3);
 }
 .rich-editor svg{vertical-align:middle;}
-
+   
 /* ============================================================
-   Popovers (math/shapes/table)
+   Popovers (math / symbols / shapes / tables)
    ============================================================ */
 .popover{
   position:absolute;
@@ -1342,7 +1377,7 @@ input.shape-lbl:focus{
   padding:12px;
   box-shadow:var(--shadow-xl);
   z-index:300;
-  max-width:min(370px,94vw);
+  max-width:min(380px,94vw);
   display:none;
 }
 .popover.open{
@@ -1471,7 +1506,7 @@ input.shape-lbl:focus{
   transform:scale(1.1);
 }
 .table-picker button:hover{background:var(--accent-light);}
-
+   
 /* ============================================================
    Shape Toolbar (floating)
    ============================================================ */
@@ -1482,7 +1517,7 @@ input.shape-lbl:focus{
   border-radius:12px;
   padding:10px;
   box-shadow:var(--shadow-xl);
-  display:none;min-width:295px;
+  display:none;min-width:300px;
 }
 .shape-toolbar.open{
   display:block;
@@ -1570,9 +1605,14 @@ input.shape-lbl:focus{
   background:var(--bg-2);
   transform:translateX(-4px);
 }
+.ctx-menu hr{
+  border:none;
+  border-top:1px solid var(--border);
+  margin:4px 0;
+}
 
 /* ============================================================
-   Misc — color dot, align, image preview
+   Color Dot Indicator
    ============================================================ */
 .color-dot{
   display:inline-flex;align-items:center;
@@ -1590,6 +1630,10 @@ input.shape-lbl:focus{
   border-radius:50%;
   border:1px solid rgba(0,0,0,.15);
 }
+
+/* ============================================================
+   Align Buttons
+   ============================================================ */
 .align-btns{
   display:flex;gap:4px;margin-top:5px;
 }
@@ -1611,6 +1655,10 @@ input.shape-lbl:focus{
   border-color:var(--accent);
   box-shadow:0 6px 16px var(--accent-glow);
 }
+
+/* ============================================================
+   Image Preview
+   ============================================================ */
 .img-preview{
   margin-top:7px;
   position:relative;
@@ -1642,33 +1690,7 @@ input.shape-lbl:focus{
   transition:all .22s var(--ease-bounce);
 }
 .img-remove:hover{transform:scale(1.2) rotate(90deg);}
-
-/* ============================================================
-   Add Question Button
-   ============================================================ */
-.add-q-btn{
-  width:100%;
-  border:2px dashed var(--border-strong);
-  background:var(--bg-2);
-  padding:16px;
-  border-radius:var(--radius);
-  cursor:pointer;
-  font-size:13px;font-weight:800;
-  color:var(--text-2);
-  display:flex;align-items:center;justify-content:center;
-  gap:8px;
-  transition:all .32s var(--ease);
-}
-.add-q-btn:hover:not(:disabled){
-  border-color:var(--accent);
-  background:var(--accent-light);
-  color:var(--accent);
-  border-style:solid;
-  transform:translateY(-2px);
-}
-.add-q-btn:active:not(:disabled){transform:scale(.98);}
-.add-q-btn:disabled{opacity:.5;cursor:not-allowed;}
-
+  
 /* ============================================================
    Teacher Items
    ============================================================ */
@@ -1719,7 +1741,7 @@ input.shape-lbl:focus{
   background:var(--bg-2);
   border-color:var(--accent);
   transform:translateY(-2px);
-  box-shadow:0 10px 24px rgba(13,148,136,.12);
+  box-shadow:0 10px 24px rgba(13,148,136,.14);
 }
 .tool-btn .em{
   font-size:18px;
@@ -1796,8 +1818,8 @@ input.shape-lbl:focus{
   background:var(--accent-light);
   color:var(--accent);
   box-shadow:0 0 0 3px var(--accent-ring);
-}
-
+} 
+   
 /* ============================================================
    Auth Modal — Modern Card Design
    ============================================================ */
@@ -2025,7 +2047,7 @@ html[data-theme="dark"] .auth-google:hover{background:var(--bg-2);}
 .auth-footer a:hover{text-decoration:underline;}
 
 /* ============================================================
-   Print Styles — Enhanced
+   Print Styles
    ============================================================ */
 @media print{
   @page{size:A4;margin:0;}
@@ -2075,7 +2097,6 @@ html[data-theme="dark"] .auth-google:hover{background:var(--bg-2);}
 }
 </style>
 </head>
-
 <body>
 
 <header class="topbar no-print">
@@ -2138,186 +2159,186 @@ html[data-theme="dark"] .auth-google:hover{background:var(--bg-2);}
       <button class="subtab" data-sub="design"><span class="em">🎨</span> التصميم</button>
       <button class="subtab" data-sub="tools"><span class="em">🧰</span> أدوات</button>
     </div>
-
-    <div class="subview active" id="sub-header">
-      <div class="card">
-        <h3><span class="em">📍</span> الجهة اليمنى</h3>
-        <div class="field-group">
-          <label>الحقل الأول — اسم المدرسة</label>
-          <input type="text" data-key="h.school.text">
-          <div class="font-row">
-            <select data-key="h.school.family" data-font></select>
-            <input type="number" data-key="h.school.size" min="8" max="72">
-            <select data-key="h.school.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.school.color">
-          </div>
-        </div>
-        <div class="field-group">
-          <label>الحقل الثاني — المديرية</label>
-          <input type="text" data-key="h.dir.text">
-          <div class="font-row">
-            <select data-key="h.dir.family" data-font></select>
-            <input type="number" data-key="h.dir.size" min="8" max="72">
-            <select data-key="h.dir.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.dir.color">
-          </div>
-        </div>
-        <div class="field-group">
-          <label>الحقل الثالث — نص حر</label>
-          <input type="text" data-key="h.rightExtra.text" placeholder="اختياري...">
-          <div class="font-row">
-            <select data-key="h.rightExtra.family" data-font></select>
-            <input type="number" data-key="h.rightExtra.size" min="8" max="72">
-            <select data-key="h.rightExtra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.rightExtra.color">
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="em">🎯</span> الوسط</h3>
-        <div class="field-group">
-          <label>العنوان الرئيسي</label>
-          <input type="text" data-key="h.subject.text">
-          <div class="font-row">
-            <select data-key="h.subject.family" data-font></select>
-            <input type="number" data-key="h.subject.size" min="8" max="72">
-            <select data-key="h.subject.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.subject.color">
-          </div>
-        </div>
-        <div class="field-group">
-          <label>السطر الثاني</label>
-          <input type="text" data-key="h.year.text">
-          <div class="font-row">
-            <select data-key="h.year.family" data-font></select>
-            <input type="number" data-key="h.year.size" min="8" max="72">
-            <select data-key="h.year.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.year.color">
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="em">📎</span> الجهة اليسرى</h3>
-        <div class="field-group">
-          <label>الوقت</label>
-          <input type="text" data-key="h.time.text">
-          <div class="font-row">
-            <select data-key="h.time.family" data-font></select>
-            <input type="number" data-key="h.time.size" min="8" max="72">
-            <select data-key="h.time.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.time.color">
-          </div>
-        </div>
-        <div class="field-group">
-          <label>المادة</label>
-          <input type="text" data-key="h.subjectLeft.text">
-          <div class="font-row">
-            <select data-key="h.subjectLeft.family" data-font></select>
-            <input type="number" data-key="h.subjectLeft.size" min="8" max="72">
-            <select data-key="h.subjectLeft.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.subjectLeft.color">
-          </div>
-        </div>
-        <div class="field-group">
-          <label>الصف</label>
-          <input type="text" data-key="h.grade.text">
-          <div class="font-row">
-            <select data-key="h.grade.family" data-font></select>
-            <input type="number" data-key="h.grade.size" min="8" max="72">
-            <select data-key="h.grade.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.grade.color">
-          </div>
-        </div>
-        <div class="field-group">
-          <label>نص حر</label>
-          <input type="text" data-key="h.leftExtra.text" placeholder="اختياري...">
-          <div class="font-row">
-            <select data-key="h.leftExtra.family" data-font></select>
-            <input type="number" data-key="h.leftExtra.size" min="8" max="72">
-            <select data-key="h.leftExtra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.leftExtra.color">
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="em">➖</span> الخط الفاصل</h3>
-        <div class="field-group">
-          <label>لون الخط الفاصل</label>
-          <input type="color" data-key="h.lineColor" style="height:38px;">
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="em">📌</span> الملاحظة</h3>
-        <div class="field-group">
-          <label>نص الملاحظة</label>
-          <input type="text" data-key="h.note.text">
-          <div class="font-row">
-            <select data-key="h.note.family" data-font></select>
-            <input type="number" data-key="h.note.size" min="8" max="72">
-            <select data-key="h.note.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.note.color">
-          </div>
-          <label style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text-3);">المحاذاة</label>
-          <div class="align-btns" id="noteAlignBtns">
-            <button data-align="right">يمين</button>
-            <button data-align="center">وسط</button>
-            <button data-align="left">يسار</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="em">➕</span> حقل عام إضافي</h3>
-        <label class="toggle-row">
-          <input type="checkbox" data-key="h.extra.enabled">
-          <span>تفعيل الحقل الإضافي</span>
-        </label>
-        <div class="field-group">
-          <label>النص</label>
-          <input type="text" data-key="h.extra.text">
-          <div class="font-row">
-            <select data-key="h.extra.family" data-font></select>
-            <input type="number" data-key="h.extra.size" min="8" max="72">
-            <select data-key="h.extra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
-            <input type="color" data-key="h.extra.color">
-          </div>
-        </div>
+    
+<div class="subview active" id="sub-header">
+  <div class="card">
+    <h3><span class="em">📍</span> الجهة اليمنى</h3>
+    <div class="field-group">
+      <label>الحقل الأول — اسم المدرسة</label>
+      <input type="text" data-key="h.school.text">
+      <div class="font-row">
+        <select data-key="h.school.family" data-font></select>
+        <input type="number" data-key="h.school.size" min="8" max="72">
+        <select data-key="h.school.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.school.color">
       </div>
     </div>
-
-    <div class="subview" id="sub-questions">
-      <div class="card">
-        <h3>
-          <span class="em">📝</span> الأسئلة
-          <span id="q-counter" style="font-size:11px;color:var(--text-3);font-weight:700;margin-inline-start:auto;background:var(--accent-light);padding:3px 10px;border-radius:12px;">0/10</span>
-        </h3>
-        <button class="add-q-btn" id="addQuestionBtn" onclick="addQuestion()">
-          <span style="font-size:15px;">➕</span> إضافة سؤال جديد
-        </button>
-        <p class="hint">🔣 صيغ رياضية · ∑ رموز · ⬛ أشكال · 📊 جدول · ⋯ نسخ/لصق</p>
+    <div class="field-group">
+      <label>الحقل الثاني — المديرية</label>
+      <input type="text" data-key="h.dir.text">
+      <div class="font-row">
+        <select data-key="h.dir.family" data-font></select>
+        <input type="number" data-key="h.dir.size" min="8" max="72">
+        <select data-key="h.dir.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.dir.color">
       </div>
-      <div id="questions-editor"></div>
     </div>
-
-    <div class="subview" id="sub-answers">
-      <div class="card">
-        <h3><span class="em">✅</span> صفحة الإجابات</h3>
-        <label class="toggle-row">
-          <input type="checkbox" data-key="showAnswers">
-          <span>إظهار صفحة الإجابات</span>
-        </label>
-        <div class="field-group">
-          <label>عنوان الصفحة</label>
-          <input type="text" data-key="answerTitle">
-        </div>
+    <div class="field-group">
+      <label>الحقل الثالث — نص حر</label>
+      <input type="text" data-key="h.rightExtra.text" placeholder="اختياري...">
+      <div class="font-row">
+        <select data-key="h.rightExtra.family" data-font></select>
+        <input type="number" data-key="h.rightExtra.size" min="8" max="72">
+        <select data-key="h.rightExtra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.rightExtra.color">
       </div>
-      <div id="answers-editor"></div>
     </div>
- 
+  </div>
+
+  <div class="card">
+    <h3><span class="em">🎯</span> الوسط</h3>
+    <div class="field-group">
+      <label>العنوان الرئيسي</label>
+      <input type="text" data-key="h.subject.text">
+      <div class="font-row">
+        <select data-key="h.subject.family" data-font></select>
+        <input type="number" data-key="h.subject.size" min="8" max="72">
+        <select data-key="h.subject.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.subject.color">
+      </div>
+    </div>
+    <div class="field-group">
+      <label>السطر الثاني</label>
+      <input type="text" data-key="h.year.text">
+      <div class="font-row">
+        <select data-key="h.year.family" data-font></select>
+        <input type="number" data-key="h.year.size" min="8" max="72">
+        <select data-key="h.year.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.year.color">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">📎</span> الجهة اليسرى</h3>
+    <div class="field-group">
+      <label>الوقت</label>
+      <input type="text" data-key="h.time.text">
+      <div class="font-row">
+        <select data-key="h.time.family" data-font></select>
+        <input type="number" data-key="h.time.size" min="8" max="72">
+        <select data-key="h.time.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.time.color">
+      </div>
+    </div>
+    <div class="field-group">
+      <label>المادة</label>
+      <input type="text" data-key="h.subjectLeft.text">
+      <div class="font-row">
+        <select data-key="h.subjectLeft.family" data-font></select>
+        <input type="number" data-key="h.subjectLeft.size" min="8" max="72">
+        <select data-key="h.subjectLeft.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.subjectLeft.color">
+      </div>
+    </div>
+    <div class="field-group">
+      <label>الصف</label>
+      <input type="text" data-key="h.grade.text">
+      <div class="font-row">
+        <select data-key="h.grade.family" data-font></select>
+        <input type="number" data-key="h.grade.size" min="8" max="72">
+        <select data-key="h.grade.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.grade.color">
+      </div>
+    </div>
+    <div class="field-group">
+      <label>نص حر</label>
+      <input type="text" data-key="h.leftExtra.text" placeholder="اختياري...">
+      <div class="font-row">
+        <select data-key="h.leftExtra.family" data-font></select>
+        <input type="number" data-key="h.leftExtra.size" min="8" max="72">
+        <select data-key="h.leftExtra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.leftExtra.color">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">➖</span> الخط الفاصل</h3>
+    <div class="field-group">
+      <label>لون الخط الفاصل</label>
+      <input type="color" data-key="h.lineColor" style="height:38px;">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">📌</span> الملاحظة</h3>
+    <div class="field-group">
+      <label>نص الملاحظة</label>
+      <input type="text" data-key="h.note.text">
+      <div class="font-row">
+        <select data-key="h.note.family" data-font></select>
+        <input type="number" data-key="h.note.size" min="8" max="72">
+        <select data-key="h.note.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.note.color">
+      </div>
+      <label style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text-3);">المحاذاة</label>
+      <div class="align-btns" id="noteAlignBtns">
+        <button data-align="right">يمين</button>
+        <button data-align="center">وسط</button>
+        <button data-align="left">يسار</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">➕</span> حقل عام إضافي</h3>
+    <label class="toggle-row">
+      <input type="checkbox" data-key="h.extra.enabled">
+      <span>تفعيل الحقل الإضافي</span>
+    </label>
+    <div class="field-group">
+      <label>النص</label>
+      <input type="text" data-key="h.extra.text">
+      <div class="font-row">
+        <select data-key="h.extra.family" data-font></select>
+        <input type="number" data-key="h.extra.size" min="8" max="72">
+        <select data-key="h.extra.weight"><option value="normal">عادي</option><option value="bold">عريض</option></select>
+        <input type="color" data-key="h.extra.color">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="subview" id="sub-questions">
+  <div class="card">
+    <h3>
+      <span class="em">📝</span> الأسئلة
+      <span id="q-counter" style="font-size:11px;color:var(--text-3);font-weight:700;margin-inline-start:auto;background:var(--accent-light);padding:3px 10px;border-radius:12px;">0/10</span>
+    </h3>
+    <button class="add-q-btn" id="addQuestionBtn" onclick="addQuestion()">
+      <span style="font-size:15px;">➕</span> إضافة سؤال جديد
+    </button>
+    <p class="hint">🔣 صيغ رياضية · ∑ رموز · ⬛ أشكال · 📊 جدول · ⋯ نسخ/لصق</p>
+  </div>
+  <div id="questions-editor"></div>
+</div>
+
+<div class="subview" id="sub-answers">
+  <div class="card">
+    <h3><span class="em">✅</span> صفحة الإجابات</h3>
+    <label class="toggle-row">
+      <input type="checkbox" data-key="showAnswers">
+      <span>إظهار صفحة الإجابات</span>
+    </label>
+    <div class="field-group">
+      <label>عنوان الصفحة</label>
+      <input type="text" data-key="answerTitle">
+    </div>
+  </div>
+  <div id="answers-editor"></div>
+</div>
+
     <div class="subview" id="sub-footer">
       <div class="card">
         <h3><span class="em">💬</span> العبارة العلوية</h3>
@@ -2404,7 +2425,7 @@ html[data-theme="dark"] .auth-google:hover{background:var(--bg-2);}
           <input type="number" data-key="wm.opacity" min="0.01" max="1" step="0.05">
         </div>
         <div class="field-group">
-          <label>الدوران (0 = موازي للورقة)</label>
+          <label>الدوران (0 = موازي)</label>
           <input type="number" data-key="wm.rotate" min="-90" max="90" step="5">
         </div>
       </div>
@@ -2553,7 +2574,7 @@ html[data-theme="dark"] .auth-google:hover{background:var(--bg-2);}
   <hr>
   <button onclick="ctxAction('selectAll')"><span>🔘</span> تحديد الكل</button>
 </div>
-  
+
 <script>
 "use strict";
 
@@ -2568,9 +2589,10 @@ let currentUser = null;
 /* ============================================================
    Constants
    ============================================================ */
-const STORAGE_KEY='inkwell_v18';
+const STORAGE_KEY='inkwell_v19';
 const THEME_KEY='inkwell_theme';
 const MAX_QUESTIONS=10;
+
 const FONTS=['Arial','Tahoma','Times New Roman','Traditional Arabic','Simplified Arabic','Sakkal Majalla','Andalus','Diwani','Arabic Typesetting','Calibri','Courier New'];
 
 const FRAMES=[
@@ -2603,24 +2625,6 @@ const SYMBOL_CATS = {
   'أسهم':['←','→','↑','↓','↔','⇕','⇒','⇐','⇔','↦']
 };
 
-const SHAPES=[
-  {id:'tri',name:'مثلث',w:150,h:130,svg:'<svg viewBox="0 0 150 130" preserveAspectRatio="none"><polygon points="75,15 12,115 138,115" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'A'},{x:8,y:122,p:'B'},{x:142,y:122,p:'C'},{x:75,y:127,p:'a'},{x:117,y:60,r:54,p:'b'},{x:33,y:60,r:-54,p:'c'}]},
-  {id:'rtri',name:'قائم',w:150,h:130,svg:'<svg viewBox="0 0 150 130" preserveAspectRatio="none"><polygon points="15,15 15,115 135,115" fill="none" stroke="currentColor" stroke-width="1.6"/><polyline points="15,101 29,101 29,115" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',labels:[{x:6,y:65,p:'a'},{x:75,y:127,p:'b'},{x:100,y:55,r:-46,p:'c'},{x:8,y:122,p:'B'},{x:142,y:122,p:'C'},{x:75,y:6,p:'A'}]},
-  {id:'sq',name:'مربع',w:100,h:100,svg:'<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="15" y="15" width="70" height="70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:50,y:6,p:'a'},{x:50,y:94,p:'c'},{x:6,y:50,p:'b'},{x:94,y:50,p:'d'}]},
-  {id:'rect',name:'مستطيل',w:150,h:100,svg:'<svg viewBox="0 0 150 100" preserveAspectRatio="none"><rect x="15" y="15" width="120" height="70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'a'},{x:75,y:94,p:'c'},{x:6,y:50,p:'b'},{x:144,y:50,p:'d'}]},
-  {id:'circ',name:'دائرة',w:100,h:100,svg:'<svg viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:50,y:94,p:'O'}]},
-  {id:'circ-r',name:'نصف قطر',w:110,h:100,svg:'<svg viewBox="0 0 110 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="50" y1="50" x2="90" y2="50" stroke="currentColor" stroke-width="1.6"/><circle cx="50" cy="50" r="2" fill="currentColor"/></svg>',labels:[{x:50,y:98,p:'O'},{x:70,y:42,p:'r'}]},
-  {id:'circ-d',name:'قطر',w:110,h:100,svg:'<svg viewBox="0 0 110 100" preserveAspectRatio="none"><circle cx="55" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="50" x2="95" y2="50" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:55,y:40,p:'d'}]},
-  {id:'trap',name:'شبه منحرف',w:150,h:100,svg:'<svg viewBox="0 0 150 100" preserveAspectRatio="none"><polygon points="45,15 105,15 140,85 10,85" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'a'},{x:75,y:94,p:'c'},{x:20,y:50,r:-68,p:'b'},{x:130,y:50,r:68,p:'d'}]},
-  {id:'para',name:'متوازي',w:150,h:85,svg:'<svg viewBox="0 0 150 85" preserveAspectRatio="none"><polygon points="40,15 145,15 110,70 5,70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:92,y:6,p:'a'},{x:58,y:79,p:'c'},{x:18,y:43,r:-58,p:'b'},{x:132,y:43,r:-58,p:'d'}]},
-  {id:'rho',name:'معين',w:90,h:120,svg:'<svg viewBox="0 0 90 120" preserveAspectRatio="none"><polygon points="45,15 80,60 45,105 10,60" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:45,y:6,p:'A'},{x:88,y:60,p:'B'},{x:45,y:114,p:'C'},{x:2,y:60,p:'D'}]},
-  {id:'pent',name:'خماسي',w:110,h:110,svg:'<svg viewBox="0 0 110 110" preserveAspectRatio="none"><polygon points="55,15 105,50 85,100 25,100 5,50" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:55,y:6,p:'A'},{x:108,y:50,p:'B'},{x:85,y:106,p:'C'},{x:25,y:106,p:'D'},{x:2,y:50,p:'E'}]},
-  {id:'hex',name:'سداسي',w:120,h:110,svg:'<svg viewBox="0 0 120 110" preserveAspectRatio="none"><polygon points="35,15 85,15 110,55 85,95 35,95 10,55" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:60,y:6,p:'A'},{x:118,y:55,p:'B'},{x:85,y:106,p:'C'},{x:35,y:106,p:'D'},{x:2,y:55,p:'E'}]},
-  {id:'angle',name:'زاوية',w:120,h:100,svg:'<svg viewBox="0 0 120 100" preserveAspectRatio="none"><line x1="10" y1="88" x2="110" y2="88" stroke="currentColor" stroke-width="1.6"/><line x1="10" y1="88" x2="100" y2="15" stroke="currentColor" stroke-width="1.6"/><path d="M 42 88 A 32 32 0 0 0 30 65" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',labels:[{x:6,y:94,p:'O'},{x:112,y:94,p:'A'},{x:100,y:8,p:'B'},{x:40,y:70,p:'θ'}]},
-  {id:'longdiv',name:'قسمة',w:140,h:100,svg:'<svg viewBox="0 0 140 100" preserveAspectRatio="none"><line x1="10" y1="30" x2="130" y2="30" stroke="currentColor" stroke-width="1.8"/><line x1="35" y1="10" x2="35" y2="90" stroke="currentColor" stroke-width="1.8"/><line x1="35" y1="30" x2="10" y2="10" stroke="currentColor" stroke-width="1.8"/></svg>',labels:[{x:82,y:20,p:''},{x:22,y:60,p:''},{x:82,y:60,p:''}]},
-  {id:'coord',name:'محور',w:120,h:120,svg:'<svg viewBox="0 0 120 120" preserveAspectRatio="none"><line x1="15" y1="105" x2="110" y2="105" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="105" x2="15" y2="15" stroke="currentColor" stroke-width="1.6"/><polygon points="110,105 104,102 104,108" fill="currentColor"/><polygon points="15,15 12,21 18,21" fill="currentColor"/></svg>',labels:[{x:112,y:116,p:'x'},{x:10,y:8,p:'y'},{x:6,y:114,p:'O'}]}
-];
-
 const MATH_ITEMS = [
   {id:'frac',label:'كسر',glyph:'<span class="math-frac"><span class="mf-num">a</span><span class="mf-den">b</span></span>'},
   {id:'frac3',label:'كسر 1/2',glyph:'<span class="math-frac"><span class="mf-num">1</span><span class="mf-den">2</span></span>'},
@@ -2643,6 +2647,24 @@ const MATH_ITEMS = [
   {id:'log',label:'لوغاريتم',glyph:'log<sub>a</sub>(x)'},
   {id:'abs',label:'مطلق',glyph:'|x|'},
   {id:'binom',label:'معامل',glyph:'<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="border-bottom:1.4px solid currentColor;padding:0 4px;display:block;">n</span><span style="padding:0 4px;display:block;">k</span></span>'}
+];
+
+const SHAPES=[
+  {id:'tri',name:'مثلث',w:150,h:130,svg:'<svg viewBox="0 0 150 130" preserveAspectRatio="none"><polygon points="75,15 12,115 138,115" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'A'},{x:8,y:122,p:'B'},{x:142,y:122,p:'C'},{x:75,y:127,p:'a'},{x:117,y:60,r:54,p:'b'},{x:33,y:60,r:-54,p:'c'}]},
+  {id:'rtri',name:'قائم',w:150,h:130,svg:'<svg viewBox="0 0 150 130" preserveAspectRatio="none"><polygon points="15,15 15,115 135,115" fill="none" stroke="currentColor" stroke-width="1.6"/><polyline points="15,101 29,101 29,115" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',labels:[{x:6,y:65,p:'a'},{x:75,y:127,p:'b'},{x:100,y:55,r:-46,p:'c'},{x:8,y:122,p:'B'},{x:142,y:122,p:'C'},{x:75,y:6,p:'A'}]},
+  {id:'sq',name:'مربع',w:100,h:100,svg:'<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="15" y="15" width="70" height="70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:50,y:6,p:'a'},{x:50,y:94,p:'c'},{x:6,y:50,p:'b'},{x:94,y:50,p:'d'}]},
+  {id:'rect',name:'مستطيل',w:150,h:100,svg:'<svg viewBox="0 0 150 100" preserveAspectRatio="none"><rect x="15" y="15" width="120" height="70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'a'},{x:75,y:94,p:'c'},{x:6,y:50,p:'b'},{x:144,y:50,p:'d'}]},
+  {id:'circ',name:'دائرة',w:100,h:100,svg:'<svg viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:50,y:94,p:'O'}]},
+  {id:'circ-r',name:'نصف قطر',w:110,h:100,svg:'<svg viewBox="0 0 110 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="50" y1="50" x2="90" y2="50" stroke="currentColor" stroke-width="1.6"/><circle cx="50" cy="50" r="2" fill="currentColor"/></svg>',labels:[{x:50,y:98,p:'O'},{x:70,y:42,p:'r'}]},
+  {id:'circ-d',name:'قطر',w:110,h:100,svg:'<svg viewBox="0 0 110 100" preserveAspectRatio="none"><circle cx="55" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="50" x2="95" y2="50" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:55,y:40,p:'d'}]},
+  {id:'trap',name:'شبه منحرف',w:150,h:100,svg:'<svg viewBox="0 0 150 100" preserveAspectRatio="none"><polygon points="45,15 105,15 140,85 10,85" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:75,y:6,p:'a'},{x:75,y:94,p:'c'},{x:20,y:50,r:-68,p:'b'},{x:130,y:50,r:68,p:'d'}]},
+  {id:'para',name:'متوازي',w:150,h:85,svg:'<svg viewBox="0 0 150 85" preserveAspectRatio="none"><polygon points="40,15 145,15 110,70 5,70" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:92,y:6,p:'a'},{x:58,y:79,p:'c'},{x:18,y:43,r:-58,p:'b'},{x:132,y:43,r:-58,p:'d'}]},
+  {id:'rho',name:'معين',w:90,h:120,svg:'<svg viewBox="0 0 90 120" preserveAspectRatio="none"><polygon points="45,15 80,60 45,105 10,60" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:45,y:6,p:'A'},{x:88,y:60,p:'B'},{x:45,y:114,p:'C'},{x:2,y:60,p:'D'}]},
+  {id:'pent',name:'خماسي',w:110,h:110,svg:'<svg viewBox="0 0 110 110" preserveAspectRatio="none"><polygon points="55,15 105,50 85,100 25,100 5,50" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:55,y:6,p:'A'},{x:108,y:50,p:'B'},{x:85,y:106,p:'C'},{x:25,y:106,p:'D'},{x:2,y:50,p:'E'}]},
+  {id:'hex',name:'سداسي',w:120,h:110,svg:'<svg viewBox="0 0 120 110" preserveAspectRatio="none"><polygon points="35,15 85,15 110,55 85,95 35,95 10,55" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',labels:[{x:60,y:6,p:'A'},{x:118,y:55,p:'B'},{x:85,y:106,p:'C'},{x:35,y:106,p:'D'},{x:2,y:55,p:'E'}]},
+  {id:'angle',name:'زاوية',w:120,h:100,svg:'<svg viewBox="0 0 120 100" preserveAspectRatio="none"><line x1="10" y1="88" x2="110" y2="88" stroke="currentColor" stroke-width="1.6"/><line x1="10" y1="88" x2="100" y2="15" stroke="currentColor" stroke-width="1.6"/><path d="M 42 88 A 32 32 0 0 0 30 65" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',labels:[{x:6,y:94,p:'O'},{x:112,y:94,p:'A'},{x:100,y:8,p:'B'},{x:40,y:70,p:'θ'}]},
+  {id:'longdiv',name:'قسمة',w:140,h:100,svg:'<svg viewBox="0 0 140 100" preserveAspectRatio="none"><line x1="10" y1="30" x2="130" y2="30" stroke="currentColor" stroke-width="1.8"/><line x1="35" y1="10" x2="35" y2="90" stroke="currentColor" stroke-width="1.8"/><line x1="35" y1="30" x2="10" y2="10" stroke="currentColor" stroke-width="1.8"/></svg>',labels:[{x:82,y:20,p:''},{x:22,y:60,p:''},{x:82,y:60,p:''}]},
+  {id:'coord',name:'محور',w:120,h:120,svg:'<svg viewBox="0 0 120 120" preserveAspectRatio="none"><line x1="15" y1="105" x2="110" y2="105" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="105" x2="15" y2="15" stroke="currentColor" stroke-width="1.6"/><polygon points="110,105 104,102 104,108" fill="currentColor"/><polygon points="15,15 12,21 18,21" fill="currentColor"/></svg>',labels:[{x:112,y:116,p:'x'},{x:10,y:8,p:'y'},{x:6,y:114,p:'O'}]}
 ];
 
 /* ============================================================
@@ -2694,7 +2716,7 @@ let selectedShapeEditor=null;
    ============================================================ */
 function $(id){return document.getElementById(id);}
 function setNested(obj,path,val){const p=path.split('.');let c=obj;for(let i=0;i<p.length-1;i++){if(!(p[i] in c))c[p[i]]={};c=c[p[i]];}c[p[p.length-1]]=val;}
-function getNested(obj,path){return path.split('.').reduce((o,k)=>o==null?undefined:o[k],obj);}
+function getNested(obj,path){return path.split('.').reduce(function(o,k){return o==null?undefined:o[k];},obj);}
 
 let saveTimer=null;
 let saveIndTimer=null;
@@ -2722,9 +2744,7 @@ function deepMerge(t,s){
   for(const k in s){
     if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==='object'&&!Array.isArray(t[k])){
       o[k]=deepMerge(t[k],s[k]);
-    }else{
-      o[k]=s[k];
-    }
+    }else{o[k]=s[k];}
   }
   return o;
 }
@@ -2891,9 +2911,8 @@ async function authSignOut(){
   updateAuthUI();
   toast('تم تسجيل الخروج');
 }
-   
 /* ============================================================
-   Build Header / Footer / Question (for paper)
+   Build Header / Footer / Question Elements
    ============================================================ */
 function buildHeaderElement(){
   const header=document.createElement('div');
@@ -3310,10 +3329,10 @@ function changeZoom(delta){
 function updateZoomUI(){
   const el=$('zoomPct');
   if(el)el.textContent=Math.round((state.ui.zoom||1)*100)+'%';
-}
-
+                                   }
+   
 /* ============================================================
-   Views navigation + Theme
+   View Navigation + Theme
    ============================================================ */
 function switchView(name){
   document.querySelectorAll('.navbtn').forEach(function(b){
@@ -3377,7 +3396,437 @@ function fillFontSelects(){
 }
 
 /* ============================================================
-   Editors
+   Rich Editor Helpers
+   ============================================================ */
+function preventDefault(e){e.preventDefault();}
+
+function saveSelection(){
+  const sel=window.getSelection();
+  if(sel.rangeCount>0){
+    const r=sel.getRangeAt(0);
+    if(r.startContainer.parentElement&&r.startContainer.parentElement.closest('.rich-editor')){
+      savedRange=r.cloneRange();
+    }
+  }
+}
+function restoreSelection(){
+  if(!savedRange)return;
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(savedRange);
+}
+function execCmd(cmd,btn){
+  saveSelection();
+  document.execCommand(cmd,false,null);
+  if(savedRange){
+    const editor=savedRange.startContainer.parentElement&&
+                 savedRange.startContainer.parentElement.closest('.rich-editor');
+    if(editor)editor.dispatchEvent(new Event('input',{bubbles:true}));
+  }
+  if(btn){
+    try{btn.classList.toggle('active',document.queryCommandState(cmd));}catch(e){}
+  }
+}
+function applySizeToSelection(pt){
+  const sel=window.getSelection();
+  if(!sel.rangeCount||sel.isCollapsed){toast('حدد النص أولاً');return;}
+  const range=sel.getRangeAt(0);
+  const span=document.createElement('span');
+  span.style.fontSize=pt+'pt';
+  try{range.surroundContents(span);}
+  catch(e){
+    const frag=range.extractContents();
+    span.appendChild(frag);
+    range.insertNode(span);
+  }
+  const editor=span.closest('.rich-editor');
+  if(editor)editor.dispatchEvent(new Event('input',{bubbles:true}));
+  const nr=document.createRange();
+  nr.selectNodeContents(span);
+  sel.removeAllRanges();
+  sel.addRange(nr);
+  toast('تم تطبيق الحجم '+pt);
+}
+function applyColorToSelection(color){
+  const sel=window.getSelection();
+  if(!sel.rangeCount||sel.isCollapsed){toast('حدد النص أولاً');return;}
+  const range=sel.getRangeAt(0);
+  const span=document.createElement('span');
+  span.style.color=color;
+  try{range.surroundContents(span);}
+  catch(e){
+    const frag=range.extractContents();
+    span.appendChild(frag);
+    range.insertNode(span);
+  }
+  const editor=span.closest('.rich-editor');
+  if(editor)editor.dispatchEvent(new Event('input',{bubbles:true}));
+  const nr=document.createRange();
+  nr.selectNodeContents(span);
+  sel.removeAllRanges();
+  sel.addRange(nr);
+}
+function insertAtCursorInEditor(editor,html){
+  editor.focus();
+  const sel=window.getSelection();
+  if(!sel.rangeCount||!editor.contains(sel.anchorNode)){
+    const r=document.createRange();
+    r.selectNodeContents(editor);
+    r.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+  const range=sel.getRangeAt(0);
+  range.deleteContents();
+
+  const temp=document.createElement('div');
+  temp.innerHTML=html;
+  const frag=document.createDocumentFragment();
+  let node,lastNode;
+  while((node=temp.firstChild)){lastNode=frag.appendChild(node);}
+  range.insertNode(frag);
+
+  editor.querySelectorAll('input.shape-lbl').forEach(function(inp){
+    if(inp._bound)return;
+    inp._bound=true;
+    inp.addEventListener('input',function(){
+      inp.setAttribute('value',inp.value);
+      editor.dispatchEvent(new Event('input',{bubbles:true}));
+    });
+  });
+
+  if(lastNode){
+    const r=range.cloneRange();
+    r.setStartAfter(lastNode);
+    r.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+  editor.dispatchEvent(new Event('input',{bubbles:true}));
+}
+
+/* ============================================================
+   Popovers
+   ============================================================ */
+function togglePopover(popover,editor,mode){
+  if(popover.classList.contains('open')&&popover.dataset.mode===mode){
+    popover.classList.remove('open');
+    return;
+  }
+  popover.innerHTML='';
+  popover.dataset.mode=mode;
+  popover.classList.add('open');
+  if(mode==='math')renderMathPopover(popover,editor);
+  else if(mode==='sym')renderSymPopover(popover,editor);
+  else if(mode==='table')renderTablePopover(popover,editor);
+  else renderShapesPopover(popover,editor);
+
+  setTimeout(function(){
+    const handler=function(e){
+      if(!popover.contains(e.target)){
+        popover.classList.remove('open');
+        document.removeEventListener('click',handler,true);
+      }
+    };
+    document.addEventListener('click',handler,true);
+  },10);
+}
+function renderMathPopover(popover,editor){
+  const title=document.createElement('div');
+  title.className='popover-title';
+  title.textContent='صيغ رياضية';
+  popover.appendChild(title);
+  const grid=document.createElement('div');
+  grid.className='math-grid';
+  MATH_ITEMS.forEach(function(m){
+    const b=document.createElement('button');
+    b.type='button';
+    b.innerHTML=m.glyph+'<span class="lbl">'+m.label+'</span>';
+    b.onmousedown=preventDefault;
+    b.onclick=function(){
+      insertAtCursorInEditor(editor,'<span class="math-item" contenteditable="true">'+m.glyph+'</span>&nbsp;');
+    };
+    grid.appendChild(b);
+  });
+  popover.appendChild(grid);
+}
+function renderSymPopover(popover,editor){
+  const cats=Object.keys(SYMBOL_CATS);
+  const catBar=document.createElement('div');
+  catBar.className='popover-cats';
+  const grid=document.createElement('div');
+  grid.className='sym-grid';
+
+  function showCat(name){
+    catBar.querySelectorAll('button').forEach(function(b){
+      b.classList.toggle('active',b.dataset.cat===name);
+    });
+    grid.innerHTML='';
+    SYMBOL_CATS[name].forEach(function(sym){
+      const b=document.createElement('button');
+      b.type='button';
+      b.textContent=sym;
+      b.onmousedown=preventDefault;
+      b.onclick=function(){insertAtCursorInEditor(editor,sym);};
+      grid.appendChild(b);
+    });
+  }
+  cats.forEach(function(c){
+    const b=document.createElement('button');
+    b.type='button';
+    b.textContent=c;
+    b.dataset.cat=c;
+    b.onmousedown=preventDefault;
+    b.onclick=function(){showCat(c);};
+    catBar.appendChild(b);
+  });
+  popover.appendChild(catBar);
+  popover.appendChild(grid);
+  showCat(cats[0]);
+}
+function renderTablePopover(popover,editor){
+  const title=document.createElement('div');
+  title.className='popover-title';
+  title.textContent='اختر حجم الجدول';
+  popover.appendChild(title);
+  const picker=document.createElement('div');
+  picker.className='table-picker';
+  const cols=6,rows=4;
+  for(let r=1;r<=rows;r++){
+    for(let c=1;c<=cols;c++){
+      const b=document.createElement('button');
+      b.type='button';
+      b.dataset.r=r;b.dataset.c=c;
+      b.onmousedown=preventDefault;
+      b.onmouseenter=function(){
+        picker.querySelectorAll('button').forEach(function(btn){
+          const rr=+btn.dataset.r,cc=+btn.dataset.c;
+          btn.classList.toggle('on',rr<=r&&cc<=c);
+        });
+      };
+      b.onclick=function(){insertAtCursorInEditor(editor,buildTableHtml(r,c));};
+      picker.appendChild(b);
+    }
+  }
+  popover.appendChild(picker);
+
+  const custom=document.createElement('div');
+  custom.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;';
+  const rInp=document.createElement('input');
+  rInp.type='number';rInp.min=1;rInp.max=20;rInp.placeholder='صفوف';rInp.value=3;
+  rInp.style.cssText='border:1px solid var(--border);border-radius:6px;padding:6px;font-size:12px;background:var(--bg-1);outline:none;';
+  custom.appendChild(rInp);
+  const cInp=document.createElement('input');
+  cInp.type='number';cInp.min=1;cInp.max=20;cInp.placeholder='أعمدة';cInp.value=3;
+  cInp.style.cssText='border:1px solid var(--border);border-radius:6px;padding:6px;font-size:12px;background:var(--bg-1);outline:none;';
+  custom.appendChild(cInp);
+  popover.appendChild(custom);
+
+  const btn=document.createElement('button');
+  btn.textContent='إدراج جدول مخصص';
+  btn.style.cssText='width:100%;margin-top:6px;padding:8px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-family:inherit;font-size:12px;';
+  btn.onclick=function(){
+    const r=Math.max(1,Math.min(20,+rInp.value||3));
+    const c=Math.max(1,Math.min(20,+cInp.value||3));
+    insertAtCursorInEditor(editor,buildTableHtml(r,c));
+  };
+  popover.appendChild(btn);
+}
+function buildTableHtml(rows,cols){
+  let html='<table class="content-table"><tbody>';
+  for(let r=0;r<rows;r++){
+    html+='<tr>';
+    for(let c=0;c<cols;c++){
+      const tag=(r===0)?'th':'td';
+      html+='<'+tag+' contenteditable="true"> </'+tag+'>';
+    }
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  return html+'<p><br></p>';
+}
+function renderShapesPopover(popover,editor){
+  const title=document.createElement('div');
+  title.className='popover-title';
+  title.textContent='الأشكال الهندسية';
+  popover.appendChild(title);
+  const grid=document.createElement('div');
+  grid.className='shapes-grid';
+  SHAPES.forEach(function(sh){
+    const b=document.createElement('button');
+    b.type='button';
+    b.onmousedown=preventDefault;
+    const scale=Math.min(56/sh.w,42/sh.h);
+    const pw=Math.round(sh.w*scale),ph=Math.round(sh.h*scale);
+    b.innerHTML='<div style="width:'+pw+'px;height:'+ph+'px;display:flex;align-items:center;justify-content:center;">'+
+                sh.svg.replace('<svg ','<svg width="'+pw+'" height="'+ph+'" ')+
+                '</div><span>'+sh.name+'</span>';
+    b.onclick=function(){insertAtCursorInEditor(editor,shapeToHtml(sh));};
+    grid.appendChild(b);
+  });
+  popover.appendChild(grid);
+}
+
+function shapeToHtml(sh){
+  const labelsHtml=sh.labels.map(function(lbl,i){
+    const rot=lbl.r?' rotate('+lbl.r+'deg)':'';
+    const leftPct=(lbl.x/sh.w*100).toFixed(2);
+    const topPct=(lbl.y/sh.h*100).toFixed(2);
+    return '<input type="text" class="shape-lbl" data-idx="'+i+'" value="" placeholder="'+(lbl.p||'')+'" '+
+           'style="left:'+leftPct+'%;top:'+topPct+'%;transform:translate(-50%,-50%)'+rot+';">';
+  }).join('');
+  return '<span class="shape-block" contenteditable="false" data-shape="'+sh.id+'" data-base-w="'+sh.w+'" data-base-h="'+sh.h+'" data-scale="1" data-rotate="0" data-float="inline" style="width:'+sh.w+'px;height:'+sh.h+'px;">'+
+         sh.svg + labelsHtml +
+         '</span>';
+}
+   
+/* ============================================================
+   Shape Toolbar Functions
+   ============================================================ */
+function selectShape(shape,editor){
+  document.querySelectorAll('.shape-block.selected').forEach(function(el){
+    el.classList.remove('selected');
+  });
+  shape.classList.add('selected');
+  selectedShape=shape;
+  selectedShapeEditor=editor;
+  const tb=$('shapeToolbar');
+  if(!tb)return;
+  tb.classList.add('open');
+  const r=shape.getBoundingClientRect();
+  const tbW=300,tbH=230;
+  let left=r.left;
+  let top=r.bottom+8;
+  if(left+tbW>window.innerWidth-8)left=window.innerWidth-tbW-8;
+  if(left<8)left=8;
+  if(top+tbH>window.innerHeight-8)top=Math.max(8,r.top-tbH-8);
+  tb.style.left=left+'px';
+  tb.style.top=top+'px';
+  syncShapeToolbar();
+}
+function syncShapeToolbar(){
+  if(!selectedShape)return;
+  const s=parseFloat(selectedShape.dataset.scale||'1')||1;
+  const r=parseFloat(selectedShape.dataset.rotate||'0')||0;
+  const f=selectedShape.dataset.float||'inline';
+  const scaleEl=$('stScale');
+  const svEl=$('stScaleVal');
+  const rvEl=$('stRotVal');
+  if(scaleEl)scaleEl.value=s;
+  if(svEl)svEl.textContent=Math.round(s*100)+'%';
+  if(rvEl)rvEl.textContent=r+'°';
+  document.querySelectorAll('#shapeToolbar [data-pos]').forEach(function(b){
+    b.classList.toggle('on',b.dataset.pos===f);
+  });
+}
+function hideShapeToolbar(){
+  document.querySelectorAll('.shape-block.selected').forEach(function(el){
+    el.classList.remove('selected');
+  });
+  selectedShape=null;
+  selectedShapeEditor=null;
+  const tb=$('shapeToolbar');
+  if(tb)tb.classList.remove('open');
+}
+function applyShapeScale(v){
+  if(!selectedShape)return;
+  const s=parseFloat(v)||1;
+  selectedShape.dataset.scale=s;
+  const bw=parseFloat(selectedShape.dataset.baseW||'100')||100;
+  const bh=parseFloat(selectedShape.dataset.baseH||'100')||100;
+  selectedShape.style.setProperty('width',Math.round(bw*s)+'px','important');
+  selectedShape.style.setProperty('height',Math.round(bh*s)+'px','important');
+  const el=$('stScaleVal');
+  if(el)el.textContent=Math.round(s*100)+'%';
+  if(selectedShapeEditor)selectedShapeEditor.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function rotateShape(delta){
+  if(!selectedShape)return;
+  let cur=parseFloat(selectedShape.dataset.rotate||'0');
+  if(delta==='reset')cur=0;
+  else cur=cur+delta;
+  cur=((cur%360)+360)%360;
+  selectedShape.dataset.rotate=cur;
+  selectedShape.style.transform='rotate('+cur+'deg)';
+  selectedShape.style.transformOrigin='center center';
+  const el=$('stRotVal');
+  if(el)el.textContent=cur+'°';
+  if(selectedShapeEditor)selectedShapeEditor.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function setShapePosition(pos){
+  if(!selectedShape)return;
+  selectedShape.dataset.float=pos;
+  selectedShape.setAttribute('data-float',pos);
+  selectedShape.style.float='';
+  document.querySelectorAll('#shapeToolbar [data-pos]').forEach(function(b){
+    b.classList.toggle('on',b.dataset.pos===pos);
+  });
+  if(selectedShapeEditor)selectedShapeEditor.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function deleteSelectedShape(){
+  if(!selectedShape)return;
+  if(!confirm('حذف الشكل؟'))return;
+  const ed=selectedShapeEditor;
+  selectedShape.remove();
+  hideShapeToolbar();
+  if(ed)ed.dispatchEvent(new Event('input',{bubbles:true}));
+  toast('تم حذف الشكل');
+}
+document.addEventListener('click',function(e){
+  const tb=$('shapeToolbar');
+  if(!tb)return;
+  if(tb.classList.contains('open')&&
+     !tb.contains(e.target)&&
+     !e.target.closest('.shape-block')){
+    hideShapeToolbar();
+  }
+},true);
+
+/* ============================================================
+   Context Menu
+   ============================================================ */
+function showCtxMenu(anchor,editor){
+  saveSelection();
+  const m=$('ctxMenu');
+  if(!m)return;
+  const r=anchor.getBoundingClientRect();
+  m.style.top=(r.bottom+6)+'px';
+  m.style.left=Math.max(6,Math.min(window.innerWidth-200,r.left-160))+'px';
+  m._editor=editor;
+  m.classList.add('open');
+  setTimeout(function(){
+    const handler=function(e){
+      if(!m.contains(e.target)){
+        m.classList.remove('open');
+        document.removeEventListener('click',handler,true);
+      }
+    };
+    document.addEventListener('click',handler,true);
+  },10);
+}
+function ctxAction(action){
+  const m=$('ctxMenu');
+  const editor=m._editor;
+  if(!editor)return;
+  editor.focus();
+  restoreSelection();
+  try{
+    if(action==='copy')document.execCommand('copy');
+    else if(action==='cut')document.execCommand('cut');
+    else if(action==='paste')toast('اضغط مطولاً ثم لصق');
+    else if(action==='selectAll'){
+      const r=document.createRange();
+      r.selectNodeContents(editor);
+      const s=window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+    }
+  }catch(e){}
+  m.classList.remove('open');
+}
+
+/* ============================================================
+   Editors — Questions / Answers / Teachers
    ============================================================ */
 function miniBtn(txt,title,fn){
   const b=document.createElement('button');
@@ -3405,13 +3854,11 @@ function newQuestionObj(){
     ansAnswer:'',ansAnswerStyle:defaultAnsAnswerStyle()
   };
 }
-
 function addQuestion(){
   if(state.questions.length>=MAX_QUESTIONS){toast('وصلت للحد الأقصى');return;}
   state.questions.push(newQuestionObj());
   save();fullRender();
 }
-
 function moveQuestion(idx,dir){
   const ni=idx+dir;
   if(ni<0||ni>=state.questions.length)return;
@@ -3420,13 +3867,11 @@ function moveQuestion(idx,dir){
   state.questions[ni]=tmp;
   save();fullRender();
 }
-
 function deleteQuestion(idx){
   if(!confirm('حذف السؤال '+(idx+1)+'؟'))return;
   state.questions.splice(idx,1);
   save();fullRender();
 }
-
 function duplicateQuestion(idx){
   if(state.questions.length>=MAX_QUESTIONS){toast('وصلت للحد الأقصى');return;}
   const q=state.questions[idx];
@@ -3440,11 +3885,7 @@ function duplicateQuestion(idx){
   save();fullRender();
   toast('تم النسخ');
 }
-
-function addTeacher(){
-  state.f.teacherList.push('');
-  save();fullRender();
-}
+function addTeacher(){state.f.teacherList.push('');save();fullRender();}
 
 function renderQuestionsEditor(){
   const cont=$('questions-editor');
@@ -3478,12 +3919,10 @@ function buildFontRow(target,onChange,withLineHeight){
   row.appendChild(famSel);
 
   const szInp=document.createElement('input');
-  szInp.type='number';
-  szInp.min=6;szInp.max=72;
+  szInp.type='number';szInp.min=6;szInp.max=72;
   szInp.value=target.size||12;
   szInp.addEventListener('input',function(){
-    target.size=Number(szInp.value)||12;
-    onChange();
+    target.size=Number(szInp.value)||12;onChange();
   });
   row.appendChild(szInp);
 
@@ -3505,12 +3944,10 @@ function buildFontRow(target,onChange,withLineHeight){
 
   if(withLineHeight){
     const lhInp=document.createElement('input');
-    lhInp.type='number';
-    lhInp.min=0.8;lhInp.max=3;lhInp.step=0.1;
+    lhInp.type='number';lhInp.min=0.8;lhInp.max=3;lhInp.step=0.1;
     lhInp.value=target.lineHeight||1.6;
     lhInp.addEventListener('input',function(){
-      target.lineHeight=Number(lhInp.value)||1.6;
-      onChange();
+      target.lineHeight=Number(lhInp.value)||1.6;onChange();
     });
     row.appendChild(lhInp);
   }
@@ -3535,19 +3972,24 @@ function buildQuestionCard(q,idx){
 
   const dup=miniBtn('⧉','نسخ',function(){duplicateQuestion(idx);});
   head.appendChild(dup);
-
   const up=miniBtn('▲','أعلى',function(){moveQuestion(idx,-1);});
   if(idx===0)up.disabled=true;
   head.appendChild(up);
-
   const dn=miniBtn('▼','أسفل',function(){moveQuestion(idx,1);});
   if(idx===state.questions.length-1)dn.disabled=true;
   head.appendChild(dn);
-
   const del=miniBtn('✕','حذف',function(){deleteQuestion(idx);});
   head.appendChild(del);
 
   card.appendChild(head);
+
+  /* Title */
+  const titleBlock=document.createElement('div');
+  titleBlock.className='style-block';
+  const tHeader=document.createElement('div');
+  tHeader.className='style-block-title';
+  tHeader.innerHTML='<span>🏷️ العنوان</span>';
+  titleBlock.appendChild(tHeader);
 
   const tInp=document.createElement('input');
   tInp.type='text';
@@ -3557,33 +3999,270 @@ function buildQuestionCard(q,idx){
   tInp.addEventListener('input',function(){
     q.title=tInp.value;save();schedulePaperUpdate();
   });
-  card.appendChild(tInp);
+  titleBlock.appendChild(tInp);
 
   q.titleStyle=q.titleStyle||defaultTitleStyle();
-  card.appendChild(buildFontRow(q.titleStyle,function(){save();schedulePaperUpdate();},false));
+  titleBlock.appendChild(buildFontRow(q.titleStyle,function(){save();schedulePaperUpdate();},false));
+  card.appendChild(titleBlock);
 
-  const ta=document.createElement('textarea');
-  ta.placeholder='وصف السؤال...';
-  ta.value=q.desc||'';
-  ta.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;min-height:80px;resize:vertical;font-family:inherit;margin-top:9px;';
-  ta.addEventListener('input',function(){
-    q.desc=ta.value;save();schedulePaperUpdate();
+  /* Description — Rich Editor */
+  const descBlock=document.createElement('div');
+  descBlock.className='style-block';
+  const dHeader=document.createElement('div');
+  dHeader.className='style-block-title';
+  dHeader.innerHTML='<span>📝 الوصف</span>';
+  descBlock.appendChild(dHeader);
+
+  const richWrap=document.createElement('div');
+  richWrap.className='rich-wrap';
+
+  const toolbar=document.createElement('div');
+  toolbar.className='rich-toolbar';
+
+  /* Bold / Italic / Underline / Strike */
+  [['bold','<b>B</b>','عريض'],
+   ['italic','<i>I</i>','مائل'],
+   ['underline','<u>U</u>','تحته خط'],
+   ['strikeThrough','<s>S</s>','شطب']].forEach(function(cfg){
+    const b=document.createElement('button');
+    b.type='button';
+    b.innerHTML=cfg[1];
+    b.title=cfg[2];
+    b.onmousedown=preventDefault;
+    b.onclick=function(){execCmd(cfg[0],b);};
+    toolbar.appendChild(b);
   });
-  card.appendChild(ta);
+
+  const sep1=document.createElement('span');
+  sep1.className='sep';
+  toolbar.appendChild(sep1);
+
+  /* Size dropdown */
+  const szSel=document.createElement('select');
+  szSel.title='حجم النص المحدد';
+  const szDef=document.createElement('option');
+  szDef.value='';szDef.textContent='حجم';
+  szSel.appendChild(szDef);
+  [8,9,10,11,12,13,14,16,18,20,22,24,28,32,36,40,48,56,64,72].forEach(function(s){
+    const o=document.createElement('option');
+    o.value=s;o.textContent=s;
+    szSel.appendChild(o);
+  });
+  szSel.addEventListener('mousedown',function(){saveSelection();});
+  szSel.addEventListener('touchstart',function(){saveSelection();},{passive:true});
+  szSel.addEventListener('change',function(){
+    const v=szSel.value;
+    if(v){restoreSelection();applySizeToSelection(Number(v));}
+    szSel.value='';
+  });
+  toolbar.appendChild(szSel);
+
+  /* Color picker */
+  const colorInp=document.createElement('input');
+  colorInp.type='color';
+  colorInp.value='#111827';
+  colorInp.title='لون النص المحدد';
+  colorInp.addEventListener('mousedown',function(){saveSelection();});
+  colorInp.addEventListener('touchstart',function(){saveSelection();},{passive:true});
+  colorInp.addEventListener('change',function(){
+    const v=colorInp.value;
+    restoreSelection();
+    applyColorToSelection(v);
+    const ind=document.createElement('span');
+    ind.className='color-dot';
+    ind.innerHTML='تم تطبيق <span class="dot" style="background:'+v+'"></span>';
+    descBlock.appendChild(ind);
+    setTimeout(function(){ind.remove();},1600);
+  });
+  toolbar.appendChild(colorInp);
+
+  const sep2=document.createElement('span');
+  sep2.className='sep';
+  toolbar.appendChild(sep2);
+
+  /* Math / Symbols / Shapes / Table / Ctx */
+  const bMath=document.createElement('button');
+  bMath.textContent='🔣';bMath.title='صيغ رياضية';
+  bMath.onmousedown=preventDefault;
+  toolbar.appendChild(bMath);
+
+  const bSym=document.createElement('button');
+  bSym.textContent='∑';bSym.title='رموز';
+  bSym.onmousedown=preventDefault;
+  toolbar.appendChild(bSym);
+
+  const bShape=document.createElement('button');
+  bShape.textContent='⬛';bShape.title='أشكال';
+  bShape.onmousedown=preventDefault;
+  toolbar.appendChild(bShape);
+
+  const bTable=document.createElement('button');
+  bTable.textContent='📊';bTable.title='جدول';
+  bTable.onmousedown=preventDefault;
+  toolbar.appendChild(bTable);
+
+  const bCtx=document.createElement('button');
+  bCtx.textContent='⋯';bCtx.title='نسخ/لصق';
+  bCtx.style.borderRadius='50%';
+  bCtx.onmousedown=preventDefault;
+  toolbar.appendChild(bCtx);
+
+  richWrap.appendChild(toolbar);
+
+  const popover=document.createElement('div');
+  popover.className='popover';
+  richWrap.appendChild(popover);
+
+  /* Editor */
+  const editor=document.createElement('div');
+  editor.className='rich-editor';
+  editor.setAttribute('contenteditable','true');
+  editor.setAttribute('data-placeholder','اكتب وصف السؤال...');
+  editor.innerHTML=q.desc||'';
 
   q.descStyle=q.descStyle||defaultDescStyle();
-  card.appendChild(buildFontRow(q.descStyle,function(){save();schedulePaperUpdate();},true));
+  const applyDescStyle=function(){
+    const ds=q.descStyle;
+    editor.style.fontFamily=(ds.family||'Arial')+', Arial, sans-serif';
+    editor.style.fontSize=(ds.size||14)+'pt';
+    editor.style.fontWeight=ds.weight||'normal';
+    editor.style.color=ds.color||'#111827';
+    editor.style.lineHeight=String(ds.lineHeight||1.6);
+  };
+  applyDescStyle();
 
-  const ptsInp=document.createElement('input');
-  ptsInp.type='number';
-  ptsInp.min=0;ptsInp.max=100;
-  ptsInp.value=q.points||0;
-  ptsInp.placeholder='الدرجات';
-  ptsInp.style.cssText='border:1.5px solid var(--border-strong);border-radius:8px;padding:9px 11px;font-size:13px;background:var(--bg-1);outline:none;width:100%;margin-top:9px;';
-  ptsInp.addEventListener('input',function(){
-    q.points=Number(ptsInp.value)||0;save();schedulePaperUpdate();
+  /* Editor events */
+  editor.addEventListener('click',function(e){
+    const shape=e.target.closest('.shape-block');
+    if(shape&&editor.contains(shape)){
+      e.preventDefault();
+      selectShape(shape,editor);
+    }else{
+      if(!e.target.closest('.shape-toolbar'))hideShapeToolbar();
+    }
   });
-  card.appendChild(ptsInp);
+
+  setTimeout(function(){
+    editor.querySelectorAll('input.shape-lbl').forEach(function(inp){
+      const attr=inp.getAttribute('value');
+      if(attr!==null)inp.value=attr;
+      else inp.value=inp.placeholder||'';
+      inp._bound=true;
+      inp.addEventListener('input',function(){
+        inp.setAttribute('value',inp.value);
+        q.desc=editor.innerHTML;
+        save();schedulePaperUpdate();
+      });
+    });
+  },0);
+
+  editor.addEventListener('input',function(){
+    editor.querySelectorAll('input.shape-lbl').forEach(function(inp){
+      inp.setAttribute('value',inp.value);
+    });
+    q.desc=editor.innerHTML;
+    save();schedulePaperUpdate();
+  });
+
+  editor.addEventListener('paste',function(e){
+    e.preventDefault();
+    const text=(e.clipboardData||window.clipboardData).getData('text/plain');
+    document.execCommand('insertText',false,text);
+  });
+
+  editor.addEventListener('contextmenu',function(e){
+    if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
+      e.preventDefault();
+    }
+  });
+
+  richWrap.appendChild(editor);
+  descBlock.appendChild(richWrap);
+
+  /* Description style row */
+  const dSLbl=document.createElement('div');
+  dSLbl.style.cssText='font-size:10.5px;font-weight:700;color:var(--text-3);margin:10px 0 0;';
+  dSLbl.textContent='خط · حجم · سماكة · لون · تباعد';
+  descBlock.appendChild(dSLbl);
+
+  descBlock.appendChild(buildFontRow(q.descStyle,function(){
+    applyDescStyle();save();schedulePaperUpdate();
+  },true));
+
+  /* Popover bindings */
+  bMath.onclick=function(){togglePopover(popover,editor,'math');};
+  bSym.onclick=function(){togglePopover(popover,editor,'sym');};
+  bShape.onclick=function(){togglePopover(popover,editor,'shape');};
+  bTable.onclick=function(){togglePopover(popover,editor,'table');};
+  bCtx.onclick=function(e){e.stopPropagation();showCtxMenu(bCtx,editor);};
+
+  card.appendChild(descBlock);
+
+  /* Points + Image row */
+  const meta=document.createElement('div');
+  meta.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;';
+
+  const ptsItem=document.createElement('div');
+  ptsItem.className='q-meta-item';
+  const ptsLbl=document.createElement('label');
+  ptsLbl.textContent='الدرجات';
+  ptsItem.appendChild(ptsLbl);
+  const ptsInp=document.createElement('input');
+  ptsInp.type='number';ptsInp.min=0;ptsInp.max=100;
+  ptsInp.value=q.points||0;
+  ptsInp.placeholder='0';
+  ptsInp.addEventListener('input',function(){
+    q.points=Number(ptsInp.value)||0;
+    save();schedulePaperUpdate();
+  });
+  ptsItem.appendChild(ptsInp);
+  meta.appendChild(ptsItem);
+
+  const imgItem=document.createElement('div');
+  imgItem.className='q-meta-item';
+  const imgLbl=document.createElement('label');
+  imgLbl.textContent='صورة';
+  imgItem.appendChild(imgLbl);
+
+  if(q.image){
+    const preview=document.createElement('div');
+    preview.className='img-preview';
+    const img=document.createElement('img');
+    img.src=q.image;
+    preview.appendChild(img);
+    const rm=document.createElement('button');
+    rm.className='img-remove';
+    rm.textContent='✕';
+    rm.onclick=function(){
+      q.image=null;save();renderQuestionsEditor();schedulePaperUpdate();
+    };
+    preview.appendChild(rm);
+    imgItem.appendChild(preview);
+  }else{
+    const fileBtn=document.createElement('button');
+    fileBtn.className='btn ghost sm';
+    fileBtn.style.cssText='width:100%;justify-content:center;';
+    fileBtn.textContent='📷 رفع صورة';
+    fileBtn.onclick=function(){
+      const inp=document.createElement('input');
+      inp.type='file';inp.accept='image/*';
+      inp.onchange=function(){
+        const f=inp.files&&inp.files[0];
+        if(!f)return;
+        if(f.size>2*1024*1024){toast('الصورة كبيرة');return;}
+        const reader=new FileReader();
+        reader.onload=function(e){
+          q.image=e.target.result;
+          save();renderQuestionsEditor();schedulePaperUpdate();
+        };
+        reader.readAsDataURL(f);
+      };
+      inp.click();
+    };
+    imgItem.appendChild(fileBtn);
+  }
+  meta.appendChild(imgItem);
+  card.appendChild(meta);
 
   return card;
 }
@@ -3664,103 +4343,9 @@ function renderTeachersEditor(){
     cont.appendChild(row);
   });
 }
-
+   
 /* ============================================================
-   Shapes functions
-   ============================================================ */
-function selectShape(shape,editor){
-  document.querySelectorAll('.shape-block.selected').forEach(function(el){
-    el.classList.remove('selected');
-  });
-  shape.classList.add('selected');
-  selectedShape=shape;
-  selectedShapeEditor=editor;
-  const tb=$('shapeToolbar');
-  if(!tb)return;
-  tb.classList.add('open');
-}
-function hideShapeToolbar(){
-  document.querySelectorAll('.shape-block.selected').forEach(function(el){
-    el.classList.remove('selected');
-  });
-  selectedShape=null;
-  selectedShapeEditor=null;
-  const tb=$('shapeToolbar');
-  if(tb)tb.classList.remove('open');
-}
-function applyShapeScale(v){
-  if(!selectedShape)return;
-  const s=parseFloat(v)||1;
-  const bw=parseFloat(selectedShape.dataset.baseW||'100')||100;
-  const bh=parseFloat(selectedShape.dataset.baseH||'100')||100;
-  selectedShape.style.width=Math.round(bw*s)+'px';
-  selectedShape.style.height=Math.round(bh*s)+'px';
-  const el=$('stScaleVal');
-  if(el)el.textContent=Math.round(s*100)+'%';
-}
-function rotateShape(delta){
-  if(!selectedShape)return;
-  let cur=parseFloat(selectedShape.dataset.rotate||'0');
-  if(delta==='reset')cur=0;
-  else cur=cur+delta;
-  selectedShape.style.transform='rotate('+cur+'deg)';
-  const el=$('stRotVal');
-  if(el)el.textContent=cur+'°';
-}
-function setShapePosition(pos){
-  if(!selectedShape)return;
-  selectedShape.setAttribute('data-float',pos);
-  document.querySelectorAll('#shapeToolbar [data-pos]').forEach(function(b){
-    b.classList.toggle('on',b.dataset.pos===pos);
-  });
-  if(selectedShapeEditor){
-    selectedShapeEditor.dispatchEvent(new Event('input',{bubbles:true}));
-  }
-}
-function deleteSelectedShape(){
-  if(!selectedShape)return;
-  if(!confirm('حذف الشكل؟'))return;
-  selectedShape.remove();
-  hideShapeToolbar();
-}
-function showCtxMenu(anchor,editor){
-  const m=$('ctxMenu');
-  if(!m)return;
-  const r=anchor.getBoundingClientRect();
-  m.style.top=(r.bottom+6)+'px';
-  m.style.left=Math.max(6,r.left-160)+'px';
-  m._editor=editor;
-  m.classList.add('open');
-  setTimeout(function(){
-    const h=function(e){
-      if(!m.contains(e.target)){
-        m.classList.remove('open');
-        document.removeEventListener('click',h,true);
-      }
-    };
-    document.addEventListener('click',h,true);
-  },10);
-}
-function ctxAction(action){
-  const m=$('ctxMenu');
-  const editor=m._editor;
-  if(!editor)return;
-  editor.focus();
-  try{
-    if(action==='copy')document.execCommand('copy');
-    else if(action==='cut')document.execCommand('cut');
-    else if(action==='selectAll'){
-      const r=document.createRange();
-      r.selectNodeContents(editor);
-      const s=window.getSelection();
-      s.removeAllRanges();s.addRange(r);
-    }
-  }catch(e){}
-  m.classList.remove('open');
-}
-
-/* ============================================================
-   Inputs & Notes
+   Inputs Binding
    ============================================================ */
 function loadStateIntoInputs(){
   document.querySelectorAll('[data-key]').forEach(function(el){
@@ -3772,7 +4357,6 @@ function loadStateIntoInputs(){
   });
   syncNoteAlignBtns();
 }
-
 function bindAllInputs(){
   document.querySelectorAll('[data-key]').forEach(function(el){
     if(el._bound)return;
@@ -3792,7 +4376,6 @@ function bindAllInputs(){
     el.addEventListener('change',handler);
   });
 }
-
 function syncNoteAlignBtns(){
   const a=state.h.note.align||'center';
   document.querySelectorAll('#noteAlignBtns button').forEach(function(b){
@@ -3823,7 +4406,9 @@ function buildFramePicker(){
     btn.type='button';
     btn.onclick=function(){
       state.frame.style=f.id;
-      save();buildPages();updateFramePicker();
+      save();
+      buildPages();
+      updateFramePicker();
     };
     const prev=document.createElement('div');
     prev.className='preview';
@@ -3861,12 +4446,13 @@ function updateFramePicker(){
 }
 function removeWatermarkImage(){
   state.wm.image=null;
-  save();buildPages();
+  save();
+  buildPages();
   toast('تم الحذف');
 }
-
+   
 /* ============================================================
-   Export — PDF + Word
+   Export — PDF (fixed version)
    ============================================================ */
 function doPrint(){
   closeMenu();
@@ -3886,38 +4472,62 @@ function exportPDF(){
     toast('جاري تجهيز PDF...');
     const pages=document.querySelectorAll('#pages-container .page');
     if(!pages.length){toast('لا يوجد محتوى');return;}
+
+    /* نبني عنصر مؤقت مرئي بقياس A4 */
     const temp=document.createElement('div');
-    temp.style.cssText='position:fixed;top:0;left:-99999px;width:210mm;background:#fff;';
+    temp.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#fff;';
     pages.forEach(function(p){
       const clone=p.cloneNode(true);
       clone.style.position='relative';
+      clone.style.top='auto';
+      clone.style.left='auto';
+      clone.style.right='auto';
       clone.style.transform='none';
+      clone.style.margin='0';
       clone.style.width='210mm';
       clone.style.height='297mm';
+      clone.style.boxShadow='none';
+      clone.style.pageBreakAfter='always';
       temp.appendChild(clone);
     });
     document.body.appendChild(temp);
+
     const opt={
       margin:0,
       filename:'inkwell-paper.pdf',
       image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0},
+      html2canvas:{
+        scale:2,
+        useCORS:true,
+        allowTaint:true,
+        backgroundColor:'#ffffff',
+        logging:false,
+        scrollX:0,
+        scrollY:0,
+        windowWidth:temp.scrollWidth,
+        windowHeight:temp.scrollHeight
+      },
       jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
       pagebreak:{mode:['css','legacy']}
     };
+
     window.html2pdf().set(opt).from(temp).save()
       .then(function(){
         document.body.removeChild(temp);
         toast('تم حفظ PDF ✅');
       })
-      .catch(function(){
-        document.body.removeChild(temp);
+      .catch(function(err){
+        console.warn(err);
+        if(temp.parentNode)document.body.removeChild(temp);
         toast('صار خطأ، نفتح الطباعة');
         window.print();
       });
   },300);
 }
 
+/* ============================================================
+   Export — Word (fixed version)
+   ============================================================ */
 function exportWord(){
   closeMenu();
   const container=$('pages-container');
@@ -3937,22 +4547,38 @@ function exportWord(){
     });
     bodyHtml+='<div style="page-break-after:always;">'+clone.innerHTML+'</div>';
   });
-  const styles='@page{size:A4;margin:0;}body{font-family:Arial,sans-serif;direction:rtl;}'
-    +'.page-content{padding:12mm;box-sizing:border-box;}'
+
+  const styles=''
+    +'@page{size:A4;margin:1.5cm;}'
+    +'body{font-family:Arial,sans-serif;direction:rtl;color:#000;}'
+    +'.page{width:auto;height:auto;padding:0;position:static;box-shadow:none;transform:none;background:#fff;}'
+    +'.page-content{padding:0;}'
     +'.header-grid{display:table;width:100%;table-layout:fixed;border-collapse:collapse;}'
     +'.hcol{display:table-cell;vertical-align:top;width:33%;padding:2px;}'
     +'.hcol-center{text-align:center;}.hcol-left{text-align:left;}'
-    +'.header-line{border-top:2px solid #000;margin:6px 0;}'
+    +'.header-line{border-top:2px solid #000;margin:8px 0;}'
     +'.header-extra,.header-note{text-align:center;}'
+    +'.q-item{margin-bottom:10px;page-break-inside:avoid;}'
+    +'.q-head-row{display:block;}'
+    +'.q-points-el{float:left;font-weight:bold;}'
     +'.footer-grid{display:table;width:100%;table-layout:fixed;margin-top:20px;}'
     +'.fcol{display:table-cell;width:33%;padding:2px;}'
-    +'.footer-wish{text-align:center;}'
-    +'.q-item{margin-bottom:8px;}'
-    +'.watermark{display:none;}'
-    +'.q-head-row{display:flex;justify-content:space-between;align-items:baseline;}'
+    +'.footer-wish{text-align:center;font-weight:bold;}'
     +'.content-table{border-collapse:collapse;width:100%;}'
-    +'.content-table td,.content-table th{border:1px solid #000;padding:4px 8px;text-align:center;}';
-  const html='<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="ar"><head><meta charset="utf-8"><title>Inkwell</title><style>'+styles+'</style></head><body>'+bodyHtml+'</body></html>';
+    +'.content-table td,.content-table th{border:1px solid #000;padding:4px 8px;text-align:center;}'
+    +'.watermark{display:none;}'
+    +'.math-frac{display:inline-block;text-align:center;vertical-align:middle;}'
+    +'.math-frac .mf-num{border-bottom:1px solid;display:block;padding:0 4px;}'
+    +'.math-frac .mf-den{display:block;padding:0 4px;}';
+
+  const html='<!DOCTYPE html>'
+    +'<html xmlns:o="urn:schemas-microsoft-com:office:office" '
+    +'xmlns:w="urn:schemas-microsoft-com:office:word" '
+    +'xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="ar">'
+    +'<head><meta charset="utf-8"><title>Inkwell</title>'
+    +'<style>'+styles+'</style></head>'
+    +'<body>'+bodyHtml+'</body></html>';
+
   const blob=new Blob(['\ufeff',html],{type:'application/msword'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -3964,6 +4590,9 @@ function exportWord(){
   toast('تم حفظ Word ✅');
 }
 
+/* ============================================================
+   Backup / Restore / Clear
+   ============================================================ */
 function backup(){
   closeMenu();
   const data=JSON.stringify(state,null,2);
@@ -3977,13 +4606,11 @@ function backup(){
   setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
   toast('تم حفظ نسخة 💾');
 }
-
 function triggerImport(){
   closeMenu();
   const el=$('importFile');
   if(el)el.click();
 }
-
 function migrateQuestion(q){
   if(q.desc===undefined)q.desc=q.text||'';
   if(q.title===undefined)q.title='';
@@ -3998,7 +4625,6 @@ function migrateQuestion(q){
   delete q.family;delete q.size;delete q.weight;delete q.color;delete q.text;delete q.answer;
   return q;
 }
-
 function restore(input){
   const f=input.files&&input.files[0];
   if(!f)return;
@@ -4023,7 +4649,6 @@ function restore(input){
   r.readAsText(f);
   input.value='';
 }
-
 function clearAll(){
   closeMenu();
   if(!confirm('حذف كل الأسئلة؟'))return;
