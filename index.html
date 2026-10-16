@@ -935,3 +935,100 @@ input.shape-lbl:focus{
   border:none;
   color:inherit;
 }
+
+/* ============================================================
+   Content Tables
+   ============================================================ */
+.content-table{
+  border-collapse:collapse;
+  margin:6px 0;width:100%;
+  font-family:inherit;font-size:0.95em;
+}
+.content-table td,
+.content-table th{
+  border:1px solid currentColor;
+  padding:4px 8px;
+  text-align:center;
+  min-width:30px;
+}
+.content-table th{
+  font-weight:bold;
+  background:rgba(13,148,136,.06);
+}
+
+/* ============================================================
+   Tabs (Sub-navigation)
+   ============================================================ */
+.subtabs{
+  display:flex;gap:5px;
+  overflow-x:auto;
+  padding:5px;
+  background:var(--bg-1);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  margin-bottom:14px;
+  scrollbar-width:none;
+  box-shadow:var(--shadow-sm);
+}
+.subtabs::-webkit-scrollbar{display:none;}
+.subtab{
+  flex:1 0 auto;
+  border:none;background:transparent;
+  color:var(--text-2);
+  padding:10px 14px;
+  border-radius:9px;
+  cursor:pointer;
+  font-size:12.5px;font-weight:700;
+  white-space:nowrap;
+  display:flex;align-items:center;
+  gap:6px;justify-content:center;
+  transition:all .28s var(--ease);
+}
+.subtab:hover{
+  background:var(--bg-2);
+  color:var(--accent);
+  transform:translateY(-1px);
+}
+.subtab:active{transform:scale(.95);}
+.subtab.active{
+  background:var(--accent-gradient);
+  color:#fff;
+  box-shadow:0 6px 16px var(--accent-glow);
+  transform:translateY(-1px);
+}
+.subtab .em{font-size:14px;}
+
+.subview{display:none;}
+.subview.active{
+  display:block;
+  animation:fadeInUp .35s var(--ease);
+}
+
+/* ============================================================
+   Cards
+   ============================================================ */
+.card{
+  background:var(--bg-1);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  transition:box-shadow .35s var(--ease);
+  animation:fadeInUp .45s var(--ease) backwards;
+}
+.card:hover{box-shadow:var(--shadow);}
+.card h3{
+  margin:0 0 14px;
+  font-size:14px;
+  display:flex;align-items:center;gap:9px;
+  font-weight:800;
+  letter-spacing:-.1px;
+}
+.card h3 .em{font-size:16px;}
+.card .hint{
+  margin:10px 0 0;
+  font-size:11.5px;
+  color:var(--text-3);
+  line-height:1.75;
+}
