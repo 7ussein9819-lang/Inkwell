@@ -850,3 +850,88 @@ main{
   display:inline-block;
   padding:0 2px;
 }
+
+/* ============================================================
+   Shapes — with editable labels
+   ============================================================ */
+.shape-block{
+  position:relative;
+  display:inline-block;
+  vertical-align:middle;
+  margin:6px 4px;
+  user-select:none;
+  -webkit-user-select:none;
+  transition:box-shadow .15s;
+  max-width:100%;
+}
+.shape-block svg{
+  display:block;width:100%;height:100%;
+  pointer-events:none;
+}
+
+/* ============================================================
+   Shape Position Modes
+   ============================================================ */
+.shape-block[data-float="inline"]{
+  display:inline-block;
+  margin:6px 4px;float:none;
+}
+.shape-block[data-float="left"]{
+  display:block !important;
+  float:none !important;
+  margin:8px auto 8px 0 !important;
+}
+.shape-block[data-float="center"]{
+  display:block !important;
+  float:none !important;
+  margin:8px auto !important;
+}
+.shape-block[data-float="right"]{
+  display:block !important;
+  float:none !important;
+  margin:8px 0 8px auto !important;
+}
+.shape-block.selected{
+  box-shadow:0 0 0 2px var(--accent);
+  border-radius:3px;
+}
+
+/* ============================================================
+   Shape Labels (inputs for editing)
+   ============================================================ */
+.shape-lbl{
+  position:absolute;
+  text-align:center;
+  font-family:inherit;
+  color:inherit;
+  font-weight:bold;
+  padding:0;line-height:1.1;
+  box-sizing:border-box;
+}
+input.shape-lbl{
+  background:rgba(255,255,255,.85);
+  border:1px dashed rgba(13,148,136,.55);
+  border-radius:3px;
+  outline:none;
+  width:30px;height:16px;
+  padding:0 2px;
+  font-size:11px;
+  -webkit-appearance:none;
+  appearance:none;
+}
+input.shape-lbl::placeholder{
+  color:rgba(0,0,0,.25);
+  font-size:9px;
+}
+input.shape-lbl:focus{
+  border-color:var(--accent);
+  border-style:solid;
+  background:#fff;
+  z-index:5;
+  box-shadow:0 0 0 2px var(--accent-ring);
+}
+.q-desc-el .shape-lbl{
+  background:transparent;
+  border:none;
+  color:inherit;
+}
