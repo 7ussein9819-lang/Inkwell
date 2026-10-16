@@ -646,3 +646,136 @@ main{
   border-left:3px solid var(--frame-c,#000);
   border-right:3px solid var(--frame-c,#000);
 }
+
+/* ============================================================
+   Page Header (top of paper)
+   ============================================================ */
+.page-header{margin-bottom:4px;}
+.header-grid{
+  display:grid;
+  grid-template-columns:1fr 1.5fr 1fr;
+  gap:8px;
+  align-items:start;
+}
+.hcol{
+  display:flex;flex-direction:column;
+  gap:2px;min-width:0;
+}
+.hcol-right{
+  text-align:right;
+  align-items:flex-end;
+}
+.hcol-center{
+  text-align:center;
+  align-items:center;
+}
+.hcol-left{
+  text-align:left;
+  align-items:flex-start;
+}
+.hfield{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.3;
+  width:100%;
+}
+.hcol-right .hfield{text-align:right;}
+.hcol-center .hfield{text-align:center;}
+.hcol-left .hfield{text-align:left;}
+.header-extra{
+  text-align:center;margin-top:3px;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  line-height:1.3;
+}
+.header-line{margin:5px 0 4px 0;}
+.header-note{
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  margin-bottom:5px;line-height:1.5;
+}
+
+/* ============================================================
+   Questions in paper
+   ============================================================ */
+.q-item{
+  margin-bottom:8px;
+  overflow-wrap:anywhere;
+  page-break-inside:avoid;
+  break-inside:avoid;
+}
+.q-head-row{
+  display:flex;justify-content:space-between;
+  align-items:baseline;gap:8px;
+  margin-bottom:2px;flex-wrap:nowrap;
+}
+.q-title-el{
+  flex:1 1 auto;min-width:0;
+  overflow-wrap:anywhere;
+}
+.q-points-el{
+  flex:0 0 auto;white-space:nowrap;
+}
+.q-desc-el{
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.q-desc-el p{margin:0 0 3px;}
+.q-desc-el strong{font-weight:900;}
+.q-desc-el em{font-style:italic;}
+.q-desc-el u{text-decoration:underline;}
+.q-desc-el s{text-decoration:line-through;opacity:.7;}
+.q-image{
+  display:block;margin-top:6px;
+  max-width:60%;max-height:55mm;
+  object-fit:contain;border-radius:4px;
+}
+
+/* ============================================================
+   Answer items
+   ============================================================ */
+.ans-item{
+  margin-bottom:10px;
+  overflow-wrap:anywhere;
+  page-break-inside:avoid;
+  break-inside:avoid;
+}
+.ans-title{
+  font-weight:bold;
+  margin-bottom:3px;
+  overflow-wrap:anywhere;
+}
+.ans-text{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+/* ============================================================
+   Page Footer
+   ============================================================ */
+.page-footer{
+  margin-top:auto;
+  padding-top:10px;
+  display:flex;flex-direction:column;
+  gap:5px;
+}
+.footer-wish{
+  text-align:center;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  align-items:end;
+}
+.footer-grid .fcol{
+  min-width:0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.footer-grid .fcol.right{text-align:right;}
+.footer-grid .fcol.center{text-align:center;}
+.footer-grid .fcol.left{text-align:left;}
+.footer-teachers{
+  display:flex;flex-direction:column;gap:1px;
+}
