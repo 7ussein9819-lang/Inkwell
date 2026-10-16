@@ -1032,3 +1032,93 @@ input.shape-lbl:focus{
   color:var(--text-3);
   line-height:1.75;
 }
+
+/* ============================================================
+   Field Groups
+   ============================================================ */
+.field-group{
+  display:flex;flex-direction:column;
+  gap:5px;
+  padding:12px;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  margin-bottom:9px;
+  background:var(--bg-2);
+  transition:all .28s var(--ease);
+}
+.field-group:focus-within{
+  border-color:var(--accent);
+  background:var(--bg-1);
+  box-shadow:0 0 0 3px var(--accent-ring);
+  transform:translateY(-1px);
+}
+.field-group > label{
+  font-size:11.5px;
+  font-weight:700;
+  color:var(--text-2);
+}
+.field-group input[type="text"],
+.field-group input[type="number"],
+.field-group input[type="email"],
+.field-group input[type="password"],
+.field-group select{
+  border:1.5px solid var(--border-strong);
+  border-radius:8px;
+  padding:9px 11px;
+  font-size:13px;
+  background:var(--bg-1);
+  outline:none;
+  width:100%;
+  color:var(--text-1);
+  transition:all .22s var(--ease);
+}
+.field-group input:focus,
+.field-group select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-ring);
+}
+
+/* ============================================================
+   Font Row (font, size, weight, color)
+   ============================================================ */
+.font-row{
+  display:grid;
+  grid-template-columns:1.5fr 55px 80px 40px;
+  gap:6px;
+  margin-top:5px;
+}
+.font-row.with-lh{
+  grid-template-columns:1.3fr 50px 75px 38px 48px;
+}
+.font-row select,
+.font-row input[type="number"]{
+  border:1.5px solid var(--border-strong);
+  border-radius:8px;
+  padding:7px 6px;
+  font-size:12px;
+  background:var(--bg-1);
+  outline:none;
+  width:100%;min-width:0;
+  color:var(--text-1);
+}
+.font-row select:focus,
+.font-row input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-ring);
+}
+.font-row input[type="color"]{
+  border:1.5px solid var(--border-strong);
+  border-radius:8px;
+  padding:2px;
+  background:var(--bg-1);
+  width:100%;min-height:32px;
+  cursor:pointer;
+}
+.font-row input[type="color"]::-webkit-color-swatch-wrapper{padding:0;}
+.font-row input[type="color"]::-webkit-color-swatch{
+  border:none;border-radius:6px;
+}
+@media (max-width:520px){
+  .font-row{grid-template-columns:1fr 48px 68px 36px;}
+  .font-row.with-lh{grid-template-columns:1.2fr 46px 66px 34px 44px;}
+}
